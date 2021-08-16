@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Devtools Cron4j - Java Scheduling Development Kit
+title: Devtools Cron4j - Java Scheduling Utility Tool
 date: 2016-02-16 15:32:24.000000000 +09:00
 ---
 

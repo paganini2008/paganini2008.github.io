@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Introduction of distributed task scheduling system Chaconne
+title: Introduction to Chaconne - A Distributed Task Scheduling Framework
 date: 2021-06-25 08:30:00.000000000 +09:00
 ---
 
