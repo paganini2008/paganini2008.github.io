@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Introduction of Distributed Streaming Computing Framework Vortex
-date: 2016-02-15 15:32:24.000000000 +09:00
+title: Introduction of distributed streaming computing framework Vortex
+date: 2021-06-20 08:30:00.000000000 +09:00
 ---
 
 **vortex**是一款轻量级的分布式流式计算框架。vortex中文意为旋涡，代表着数据流不断地流入这个旋涡然后被平稳地输出。

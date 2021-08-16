@@ -1,0 +1,130 @@
+I"�)<p><strong>vortex</strong>是一款轻量级的分布式流式计算框架。vortex中文意为旋涡，代表着数据流不断地流入这个旋涡然后被平稳地输出。
+<strong>vortex</strong>属于内存计算型的流式框架，适用于高可用，高并发，实时计算的业务场景。
+<strong>vortex</strong>是基于SpringBoot框架之上开发的，它依赖微服务分布式协作框架tridenter实现集群特性，vortex微服务内嵌了独立的TCP服务器（默认通过Netty4实现），vortex微服务集群中的应用程序通过tridenter多播功能相互发现并建立长连接，实现高可用，去中心化和负载均衡，使得整个Spring应用程序集群具备实时计算的能力。</p>
+
+<p><strong>vortex项目一共包含3部分：</strong></p>
+<ol>
+  <li>vortex-common 
+ vortex框架的<strong>agent端</strong>jar包</li>
+  <li>vortex-spring-boot-starter
+ vortex框架的核心jar包，添加到SpringBoot应用使其成为vortex<strong>服务端</strong></li>
+  <li>vortex-metrics
+ 基于vortex的分布式时序计算框架，它是vortex重要的独立子项目</li>
+</ol>
+
+<p><strong>服务端安装</strong></p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+	 <span class="nt">&lt;groupId&gt;</span>com.github.paganini2008.atlantis<span class="nt">&lt;/groupId&gt;</span>
+         <span class="nt">&lt;artifactId&gt;</span>vortex-spring-boot-starter<span class="nt">&lt;/artifactId&gt;</span>
+	 <span class="nt">&lt;version&gt;</span>1.0-RC3<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+<p><strong>agent端安装</strong></p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+	<span class="nt">&lt;groupId&gt;</span>com.github.paganini2008.atlantis<span class="nt">&lt;/groupId&gt;</span>
+	<span class="nt">&lt;artifactId&gt;</span>vortex-common<span class="nt">&lt;/artifactId&gt;</span>
+	<span class="nt">&lt;version&gt;</span>1.0-RC3<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p><strong>目前基于vortex框架的开源项目有3个：</strong></p>
+<ol>
+  <li>分布式微服务监控系统 <a href="https://www.jianshu.com/p/3f8c7ede0d59">Jellyfish</a></li>
+  <li>分布式时序计算框架 <a href="https://www.jianshu.com/p/c5a0e4ae2fbd">Vortex Metrics</a></li>
+  <li>分布式网络爬虫<a href="https://www.jianshu.com/p/a31ad3f57d04">Greenfinger</a></li>
+</ol>
+
+<p><strong>如何在你的应用中使用vortex的API</strong>
+前面说过，vortex服务端接收数据，vortex agent端发送数据，vortex提供了HTTP和TCP两种协议来接收和发送外部数据。</p>
+<ol>
+  <li>
+    <p>vortex服务端要实现Handler接口实现定制，比如：
+``` java
+@Slf4j
+public class TestHandler implements Handler{</p>
+
+    <p>@Override
+ public void onData(Tuple tuple) {
+     log.info(tuple.toString());
+ }</p>
+  </li>
+</ol>
+
+<p>}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2. 而agent端通过TransportClient实现类来发送数据
+
+下面以jellyfish中日志收集模块为例，参考源码：
+**服务端：**
+``` java
+public class Slf4jHandler implements Handler {
+
+	private static final String TOPIC_NAME = "slf4j";
+
+	@Autowired
+	private IdGenerator idGenerator;
+
+	@Autowired
+	private LogEntryService logEntryService;
+
+	@Value("${atlantis.framework.jellyfish.handler.interferedCharacter:}")
+	private String interferedCharacterRegex;
+
+	@Override
+	public void onData(Tuple tuple) {
+		LogEntry logEntry = new LogEntry();
+		logEntry.setId(idGenerator.generateId());
+		logEntry.setClusterName(tuple.getField("clusterName", String.class));
+		logEntry.setApplicationName(tuple.getField("applicationName", String.class));
+		logEntry.setHost(tuple.getField("host", String.class));
+		logEntry.setIdentifier(tuple.getField("identifier", String.class));
+		logEntry.setLoggerName(tuple.getField("loggerName", String.class));
+		logEntry.setMessage(tuple.getField("message", String.class));
+		logEntry.setLevel(tuple.getField("level", String.class));
+		logEntry.setReason(tuple.getField("reason", String.class));
+		logEntry.setMarker(tuple.getField("marker", String.class));
+		logEntry.setCreateTime(tuple.getField("timestamp", Long.class));
+		if (StringUtils.isNotBlank(interferedCharacterRegex)) {
+			logEntry.setMessage(logEntry.getMessage().replaceAll(interferedCharacterRegex, ""));
+			logEntry.setReason(logEntry.getReason().replaceAll(interferedCharacterRegex, ""));
+		}
+		logEntryService.bulkSaveLogEntries(logEntry);
+	}
+
+	@Override
+	public String getTopic() {
+		return TOPIC_NAME;
+	}
+
+}
+</code></pre></div></div>
+
+<p><strong>Agent端</strong>, 你需要自己实现一个Agent端, 向vortex服务端不断发送数据，可参考jellyfish-slf4j的TransportClientAppenderBase.java源码：</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nd">@Override</span>
+	<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">append</span><span class="o">(</span><span class="nc">ILoggingEvent</span> <span class="n">eventObject</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">transportClient</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">return</span><span class="o">;</span>
+		<span class="o">}</span>
+		<span class="nc">Tuple</span> <span class="n">tuple</span> <span class="o">=</span> <span class="nc">Tuple</span><span class="o">.</span><span class="na">newOne</span><span class="o">(</span><span class="no">GLOBAL_TOPIC_NAME</span><span class="o">);</span>
+		<span class="n">tuple</span><span class="o">.</span><span class="na">setField</span><span class="o">(</span><span class="s">"clusterName"</span><span class="o">,</span> <span class="n">clusterName</span><span class="o">);</span>
+		<span class="n">tuple</span><span class="o">.</span><span class="na">setField</span><span class="o">(</span><span class="s">"applicationName"</span><span class="o">,</span> <span class="n">applicationName</span><span class="o">);</span>
+		<span class="n">tuple</span><span class="o">.</span><span class="na">setField</span><span class="o">(</span><span class="s">"host"</span><span class="o">,</span> <span class="n">host</span><span class="o">);</span>
+		<span class="n">tuple</span><span class="o">.</span><span class="na">setField</span><span class="o">(</span><span class="s">"identifier"</span><span class="o">,</span> <span class="n">identifier</span><span class="o">);</span>
+		<span class="n">tuple</span><span class="o">.</span><span class="na">setField</span><span class="o">(</span><span class="s">"loggerName"</span><span class="o">,</span> <span class="n">eventObject</span><span class="o">.</span><span class="na">getLoggerName</span><span class="o">());</span>
+		<span class="nc">String</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">eventObject</span><span class="o">.</span><span class="na">getFormattedMessage</span><span class="o">();</span>
+		<span class="n">tuple</span><span class="o">.</span><span class="na">setField</span><span class="o">(</span><span class="s">"message"</span><span class="o">,</span> <span class="n">msg</span><span class="o">);</span>
+		<span class="n">tuple</span><span class="o">.</span><span class="na">setField</span><span class="o">(</span><span class="s">"level"</span><span class="o">,</span> <span class="n">eventObject</span><span class="o">.</span><span class="na">getLevel</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+		<span class="nc">String</span> <span class="n">reason</span> <span class="o">=</span> <span class="nc">ThrowableProxyUtil</span><span class="o">.</span><span class="na">asString</span><span class="o">(</span><span class="n">eventObject</span><span class="o">.</span><span class="na">getThrowableProxy</span><span class="o">());</span>
+		<span class="n">tuple</span><span class="o">.</span><span class="na">setField</span><span class="o">(</span><span class="s">"reason"</span><span class="o">,</span> <span class="n">reason</span><span class="o">);</span>
+		<span class="n">tuple</span><span class="o">.</span><span class="na">setField</span><span class="o">(</span><span class="s">"marker"</span><span class="o">,</span> <span class="n">eventObject</span><span class="o">.</span><span class="na">getMarker</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">eventObject</span><span class="o">.</span><span class="na">getMarker</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">:</span> <span class="s">""</span><span class="o">);</span>
+		<span class="n">tuple</span><span class="o">.</span><span class="na">setField</span><span class="o">(</span><span class="s">"timestamp"</span><span class="o">,</span> <span class="n">eventObject</span><span class="o">.</span><span class="na">getTimeStamp</span><span class="o">());</span>
+		<span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;</span> <span class="n">mdc</span> <span class="o">=</span> <span class="n">eventObject</span><span class="o">.</span><span class="na">getMDCPropertyMap</span><span class="o">();</span>
+		<span class="k">if</span> <span class="o">(</span><span class="nc">MapUtils</span><span class="o">.</span><span class="na">isNotEmpty</span><span class="o">(</span><span class="n">mdc</span><span class="o">))</span> <span class="o">{</span>
+			<span class="n">tuple</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">mdc</span><span class="o">);</span>
+		<span class="o">}</span>
+		<span class="n">transportClient</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">tuple</span><span class="o">);</span>
+	<span class="o">}</span>
+</code></pre></div></div>
+<p>说明一下，vortex服务端和agent端的交互数据可以是Map, Tuple对象或json字符串，但最终都被包装成Tuple对象</p>
+
+<p>具体使用，可参考vortex的源码：  https://github.com/paganini2008/vortex.git</p>
+:ET
