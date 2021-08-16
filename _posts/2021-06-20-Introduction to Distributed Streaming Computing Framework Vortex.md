@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Introduction of distributed streaming computing framework Vortex
+title: Introduction to distributed streaming computing framework Vortex
 date: 2021-06-20 08:30:00.000000000 +09:00
 ---
 
