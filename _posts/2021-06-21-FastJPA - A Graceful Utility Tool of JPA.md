@@ -1,6 +1,6 @@
 ---
 layout: post
-title: FastJPA: A Graceful Utility Tool of JPA
+title: FastJPA - A Graceful Utility Tool of JPA
 date: 2021-06-21 08:30:00.000000000 +09:00
 ---
 

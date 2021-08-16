@@ -1,0 +1,2 @@
+I"�<p>FastJDBC提供了对spring框架中NamedJdbcTemplate类的二次封装，提供一种基于注解方式的API配置方式去操作sql，而不是调用NamedJdbcTemplate的方法去传递sql语句。</p>
+:ET

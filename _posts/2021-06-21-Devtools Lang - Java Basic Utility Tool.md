@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Devtools Lang: Java Basic Development Tool
+title: Devtools Lang - Java Basic Utility Tool
 date: 2021-06-21 08:30:00.000000000 +09:00
 ---
 
