@@ -1,4 +1,0 @@
-I"�<p><strong>vortex</strong>是一款轻量级的分布式流式计算框架。vortex中文意为旋涡，代表着数据流不断地流入这个旋涡然后被平稳地输出。
-<strong>vortex</strong>属于内存计算型的流式框架，适用于高可用，高并发，实时计算的业务场景。
-<strong>vortex</strong>是基于SpringBoot框架之上开发的，它依赖微服务分布式协作框架tridenter实现集群特性，vortex微服务内嵌了独立的TCP服务器（默认通过Netty4实现），vortex微服务集群中的应用程序通过tridenter多播功能相互发现并建立长连接，实现高可用，去中心化和负载均衡，使得整个Spring应用程序集群具备实时计算的能力。</p>
-:ET
