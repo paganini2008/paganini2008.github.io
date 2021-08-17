@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Vortex Metrics - A Distributed Time-series Computing Framework 
+title: Vortex Metrics - A Distributed Time-series Computing Framework
 date: 2021-06-20 08:30:00.000000000 +09:00
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Devtools Cron4j - Java Scheduling Utility Tool
-date: 2016-02-16 15:32:24.000000000 +09:00
+title: Devtools Cron4j - Fun Java Scheduling Utility Tool
+date: 2021-06-21 20:00:00.000000000 +09:00
 ---
 
 **Devtools Cron4j**是一款小巧实用的Java调度工具包，来自于devtools系列，它提供了：

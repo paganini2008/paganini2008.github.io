@@ -1,19 +1,20 @@
-I"��<p>FastJPA提供了对SpringBoot框架中关于对JPA的操作的二次封装 ，提供了面向对象的方式来操作JPQL/HQL，旨在减少sql语句编写，快速提高开发效率，使代码书写显的更加优雅和增加可读性</p>
+I"�i<p>FastJPA is a component based on SpringBoot framework. It encapsulates majority JPA operation offered by SpringBoot framework and provides an object-oriented way to operate JPQL or HQL. It aims to help developer write SQL less and use tool more, thereby quickly improving development efficiency and making code more elegant and readable</p>
 
-<h3 id="工具特性">工具特性：</h3>
+<h3 id="feature">Feature：</h3>
 <hr />
 
 <ul>
-  <li>面向对象方式的更新、删除和查询操作</li>
-  <li>查询指定列名和函数列</li>
-  <li>分组查询和过滤</li>
-  <li>列表查询和过滤</li>
-  <li>表连接查询和过滤</li>
-  <li>支持子查询</li>
-  <li>分页查询和过滤</li>
+  <li>Save, delete and query operations in object-oriented mode</li>
+  <li>Optimize  query for the specified column name</li>
+  <li>Optimize how functions are used in queries</li>
+  <li>Optimize grouping query and filtering</li>
+  <li>Optimize list query and filtering</li>
+  <li>Optimize table join queries and filtering</li>
+  <li>Optimize subquery</li>
+  <li>Optimize paging queries and filtering</li>
 </ul>
 
-<h3 id="安装">安装</h3>
+<h3 id="install-fastjpa">Install FastJPA</h3>
 <hr />
 
 <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
@@ -22,32 +23,39 @@
       <span class="nt">&lt;version&gt;</span>2.0.2<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div></div>
-<p>fastjpa-spring-boot-starter 依赖spring-boot-starter-data-jpa, 实质上是对JPA  Criteria查询API(QBC)的再封装，并设计成流式风格的API(有点类似python的orm框架sqlalchemy) ，使得JPA面向对象查询的API不再难用</p>
+<h3 id="principle-of-fastjpa">Principle of FastJPA</h3>
+<hr />
 
-<h3 id="fastjpa-核心接口">fastjpa 核心接口：</h3>
+<p>FastJPA depends on spring-boot-starter-data-jpa actually, which is a lightweight encapsulation of JPA’s QBC (query by criteria) API, and is designed into apis with a fluent style  (similar to Python’s ORM framework Sqlalchemy), making JPA easier to operate SQL</p>
+
+<h3 id="fastjpa-core-interfaces">FastJPA Core Interfaces：</h3>
 <hr />
 
 <ul>
   <li>EntityDao</li>
   <li>Model</li>
+  <li>JpaUpdate</li>
+  <li>JpaDelete</li>
   <li>JpaQuery</li>
   <li>JpaPage</li>
   <li>Filter</li>
+  <li>JpaGroupBy</li>
   <li>Column</li>
   <li>Field</li>
-  <li>JpaGroupBy</li>
   <li>JpaSort</li>
   <li>JpaPageResultSet</li>
   <li>JpaQueryResultSet</li>
-  <li>JpaUpdate</li>
-  <li>JpaDelete
-大家有兴趣的话，可以研究其源码</li>
 </ul>
 
-<h5 id="下面通过几个示例来演示一下fastjpa的几个核心接口的用法">下面通过几个示例来演示一下fastjpa的几个核心接口的用法</h5>
-<p>比如，现在有3个实体，用户，订单，商品</p>
+<h3 id="preparation-for-using-fastjpa">Preparation for using FastJPA</h3>
+<hr />
 
-<h5 id="用户实体">用户实体</h5>
+<p>For example:
+Here are three entities: User, Order, Product</p>
+<ul>
+  <li><strong>User.java</strong></li>
+</ul>
+
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Getter</span>
 <span class="nd">@Setter</span>
 <span class="nd">@Entity</span>
@@ -70,7 +78,11 @@
 
 <span class="o">}</span>
 </code></pre></div></div>
-<h5 id="商品实体">商品实体</h5>
+
+<ul>
+  <li><strong>Product.java</strong></li>
+</ul>
+
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Getter</span>
 <span class="nd">@Setter</span>
 <span class="nd">@Entity</span>
@@ -93,54 +105,67 @@
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h5 id="订单实体">订单实体</h5>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Getter</span>
-<span class="nd">@Setter</span>
-<span class="nd">@Entity</span>
-<span class="nd">@Table</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"demo_order"</span><span class="o">)</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Order</span> <span class="o">{</span>
+<ul>
+  <li>
+    <p><strong>Order.java</strong>
+``` java
+@Getter
+@Setter
+@Entity
+@Table(name = “demo_order”)
+public class Order {</p>
 
-	<span class="nd">@Id</span>
-	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"id"</span><span class="o">,</span> <span class="n">nullable</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="n">unique</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
-	<span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+    <p>@Id
+  @Column(name = “id”, nullable = false, unique = true)
+  private Long id;</p>
 
-	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"discount"</span><span class="o">,</span> <span class="n">nullable</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
-	<span class="kd">private</span> <span class="nc">Float</span> <span class="n">discount</span><span class="o">;</span>
+    <p>@Column(name = “discount”, nullable = true)
+  private Float discount;</p>
 
-	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"price"</span><span class="o">,</span> <span class="n">nullable</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="n">precision</span> <span class="o">=</span> <span class="mi">11</span><span class="o">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mi">2</span><span class="o">)</span>
-	<span class="kd">private</span> <span class="nc">BigDecimal</span> <span class="n">price</span><span class="o">;</span>
+    <p>@Column(name = “price”, nullable = false, precision = 11, scale = 2)
+  private BigDecimal price;</p>
 
-	<span class="nd">@OneToOne</span><span class="o">(</span><span class="n">targetEntity</span> <span class="o">=</span> <span class="nc">Product</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">nullable</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"product_id"</span><span class="o">,</span> <span class="n">foreignKey</span> <span class="o">=</span> <span class="nd">@ForeignKey</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"none"</span><span class="o">,</span> <span class="n">value</span> <span class="o">=</span> <span class="nc">ConstraintMode</span><span class="o">.</span><span class="na">NO_CONSTRAINT</span><span class="o">))</span>
-	<span class="kd">private</span> <span class="nc">Product</span> <span class="n">product</span><span class="o">;</span>
+    <p>@OneToOne(targetEntity = Product.class)
+  @JoinColumn(nullable = false, name = “product_id”, foreignKey = @ForeignKey(name = “none”, value = ConstraintMode.NO_CONSTRAINT))
+  private Product product;</p>
 
-	<span class="nd">@ManyToOne</span><span class="o">(</span><span class="n">targetEntity</span> <span class="o">=</span> <span class="nc">User</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
-	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">nullable</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"user_id"</span><span class="o">,</span> <span class="n">foreignKey</span> <span class="o">=</span> <span class="nd">@ForeignKey</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"none"</span><span class="o">,</span> <span class="n">value</span> <span class="o">=</span> <span class="nc">ConstraintMode</span><span class="o">.</span><span class="na">NO_CONSTRAINT</span><span class="o">))</span>
-	<span class="kd">private</span> <span class="nc">User</span> <span class="n">user</span><span class="o">;</span>
+    <p>@ManyToOne(targetEntity = User.class)
+  @JoinColumn(nullable = false, name = “user_id”, foreignKey = @ForeignKey(name = “none”, value = ConstraintMode.NO_CONSTRAINT))
+  private User user;</p>
 
-	<span class="nd">@Temporal</span><span class="o">(</span><span class="nc">TemporalType</span><span class="o">.</span><span class="na">TIMESTAMP</span><span class="o">)</span>
-	<span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"create_time"</span><span class="o">,</span> <span class="n">columnDefinition</span> <span class="o">=</span> <span class="s">"timestamp null "</span><span class="o">)</span>
-	<span class="kd">private</span> <span class="nc">Date</span> <span class="n">createTime</span><span class="o">;</span>
+    <p>@Temporal(TemporalType.TIMESTAMP)
+  @Column(name = “create_time”, columnDefinition = “timestamp null “)
+  private Date createTime;</p>
+  </li>
+</ul>
 
-<span class="o">}</span>
+<p>}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+**Step1:**  Define DAO layer, which need extend EntityDao, because it is the entry of all APIs of FastJPA
+
+* **UserDao.java**
+``` java
+public interface UserDao extends EntityDao&lt;User, Long&gt; {
+}
 </code></pre></div></div>
-<p>然后定义对应的Dao，需要继承fastjpa提供的EntityDao，但如果你不想使用fastjpa, 直接继承JpaRepositoryImplementation就行了</p>
-<h5 id="userdao">UserDao</h5>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserDao</span> <span class="kd">extends</span> <span class="nc">EntityDao</span><span class="o">&lt;</span><span class="nc">User</span><span class="o">,</span> <span class="nc">Long</span><span class="o">&gt;</span> <span class="o">{</span>
-
+<ul>
+  <li><strong>OrderDao.java</strong>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">OrderDao</span> <span class="kd">extends</span> <span class="nc">EntityDao</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">,</span> <span class="nc">Long</span><span class="o">&gt;</span> <span class="o">{</span>
 <span class="o">}</span>
-</code></pre></div></div>
-<h5 id="orderdao">OrderDao</h5>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">OrderDao</span> <span class="kd">extends</span> <span class="nc">EntityDao</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">,</span> <span class="nc">Long</span><span class="o">&gt;</span> <span class="o">{</span>
-
+</code></pre></div>    </div>
+  </li>
+  <li><strong>ProductDao.java</strong>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ProductDao</span> <span class="kd">extends</span> <span class="nc">EntityDao</span><span class="o">&lt;</span><span class="nc">Product</span><span class="o">,</span> <span class="nc">Long</span><span class="o">&gt;</span> <span class="o">{</span>
 <span class="o">}</span>
-</code></pre></div></div>
-<h5 id="productdao">ProductDao</h5>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ProductDao</span> <span class="kd">extends</span> <span class="nc">EntityDao</span><span class="o">&lt;</span><span class="nc">Product</span><span class="o">,</span> <span class="nc">Long</span><span class="o">&gt;</span> <span class="o">{</span>
+</code></pre></div>    </div>
+    <p><strong>Step 2:</strong>  insert some data into these three tables respectively for demonstration
+Here, just for testing, I suppose an order contains a lot of products,  and a user can have lots of orders.</p>
+  </li>
+</ul>
 
-<span class="o">}</span>
-</code></pre></div></div>
-<p>EntityDao是fastjpa 所有API的入口，看一下它的源码：</p>
+<h3 id="how-to-use-entitydao">How to use EntityDao?</h3>
+<hr />
+
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@NoRepositoryBean</span>
 <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">EntityDao</span><span class="o">&lt;</span><span class="no">E</span><span class="o">,</span> <span class="no">ID</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="nc">JpaRepositoryImplementation</span><span class="o">&lt;</span><span class="no">E</span><span class="o">,</span> <span class="no">ID</span><span class="o">&gt;,</span> <span class="nc">NativeSqlOperations</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="o">{</span>
 
@@ -184,66 +209,72 @@
 
 <span class="o">}</span>
 </code></pre></div></div>
-<p>其中：
-update()方法对应的是update操作
-delete()方法对应的是delete操作
-query()方法对应的是列表操作
-select()方法对应的是分页操作
-multiquery()方法对应的也是列表操作，但和query()方法不同的是，它返回的是javax.persistence.Tuple类型的数据，它用于封装分组或多表连接的查询的数据结构
-multiselect()也是类似的
-另外说一下，fastjpa组件还支持本地sql查询的使用，会在文章的末尾粗略介绍一下。</p>
+<p><strong>Some Key Methods:</strong></p>
 
-<h6 id="现在回到前面的例子继续讲一下如何使用fastjpa的api">现在，回到前面的例子，继续讲一下如何使用fastjpa的API,</h6>
-<p>首先要对这3个实体，分别插入一些数据，并设置相关的关联关系
-比如这里，假定一个商品一个订单，一个用户可以下多个订单，这里只是为了演示一下而已</p>
+<ul>
+  <li><code>update()</code>  execute  the update sql statement</li>
+  <li><code>delete()</code>  execute  the delete sql statement</li>
+  <li><code>query ()</code>  execute  the select sql statement, just returning list, not supporting pagination</li>
+  <li><code>select ()</code>  execute the select sql statement, both list and pagination being supported</li>
+  <li><code>multiquery ()</code>  similar to <code>query()</code>, but it returns data list of type <code>javax.persistence.tuple</code>, which is used in grouping query or multiple tables join query</li>
+  <li><code>multiselect ()</code> similar to <code>select()</code>, but it returns data list of type <code>javax.persistence.tuple</code>, which is used in grouping query or multiple tables join query</li>
+</ul>
 
-<h5 id="filter">Filter</h5>
-<p>相当于where条件
-支持 lt, lte, gt, gte, eq, ne, like, in, between, isNull, notNull等比较操作符
-支持 and, or, not 逻辑操作符</p>
-<h6 id="比较操作符举例">比较操作符举例：</h6>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">LogicalFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="nc">Restrictions</span><span class="o">.</span><span class="na">gt</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">);</span> <span class="c1">// 价格大于50元</span>
-		<span class="n">productDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="n">filter</span><span class="o">).</span><span class="na">selectThis</span><span class="o">().</span><span class="na">list</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span><span class="n">pro</span> <span class="o">-&gt;</span> <span class="o">{</span>
-			<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">pro</span><span class="o">);</span>
-		<span class="o">});</span>
-<span class="c1">// Hibernate: select product0_.id as id1_1_, product0_.name as name2_1_, product0_.origin as origin3_1_, product0_.price as price4_1_ from demo_product product0_ where product0_.price&gt;50.0</span>
-</code></pre></div></div>
-<p>类似的还有：</p>
+<p>In addition, FastJPA also supports native SQL query. It will be briefly introduced at the end of the article.</p>
+
+<h3 id="how-to-use-fastjpa">How to Use FastJPA?</h3>
+<hr />
+
+<h4 id="filter">Filter</h4>
+<p>Equivalent to where condition in select statement</p>
+<ul>
+  <li>Comparison operators supported: lt, lte, gt, gte, eq, ne, like, in, between, isNull, notNull</li>
+  <li>Logical operators supported: and, or, not</li>
+</ul>
+
+<p><strong>Example 1:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">LogicalFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="nc">Restrictions</span><span class="o">.</span><span class="na">between</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">50</span><span class="o">);</span>
 <span class="n">filter</span> <span class="o">=</span> <span class="nc">Restrictions</span><span class="o">.</span><span class="na">in</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span><span class="mi">20</span><span class="o">,</span><span class="mi">30</span><span class="o">,</span><span class="mi">40</span><span class="o">,</span><span class="mi">50</span><span class="o">));</span>
-<span class="n">filter</span> <span class="o">=</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">like</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">"%猴头菇%"</span><span class="o">);</span>
+<span class="n">filter</span> <span class="o">=</span> <span class="nc">Restrictions</span><span class="o">.</span><span class="na">like</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">"%cat%"</span><span class="o">);</span>
 <span class="n">filter</span> <span class="o">=</span> <span class="nc">Restrictions</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"orignal"</span><span class="o">,</span> <span class="s">"Shanghai"</span><span class="o">);</span>
 </code></pre></div></div>
-<h6 id="逻辑操作符举例">逻辑操作符举例：</h6>
-<p>and</p>
+<p><strong>Example 2:</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">LogicalFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="nc">Restrictions</span><span class="o">.</span><span class="na">gt</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">);</span> 
+<span class="n">productDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="n">filter</span><span class="o">).</span><span class="na">selectThis</span><span class="o">().</span><span class="na">list</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span><span class="n">pro</span> <span class="o">-&gt;</span> <span class="o">{</span>
+	<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">pro</span><span class="o">);</span>
+<span class="o">});</span>
+<span class="c1">// Hibernate: select product0_.id as id1_1_, product0_.name as name2_1_, product0_.origin as origin3_1_, product0_.price as price4_1_ from demo_product product0_ where product0_.price&gt;50.0</span>
+</code></pre></div></div>
+<p><strong>Example 3:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">LogicalFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="nc">Restrictions</span><span class="o">.</span><span class="na">between</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">50</span><span class="o">);</span>
-<span class="n">filter</span> <span class="o">=</span> <span class="n">filter</span><span class="o">.</span><span class="na">and</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">like</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">"%猴头菇%"</span><span class="o">));</span>
+<span class="n">filter</span> <span class="o">=</span> <span class="n">filter</span><span class="o">.</span><span class="na">and</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">like</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">"%cat%"</span><span class="o">));</span>
 <span class="n">filter</span> <span class="o">=</span> <span class="n">filter</span><span class="o">.</span><span class="na">and</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"orignal"</span><span class="o">,</span> <span class="s">"Shanghai"</span><span class="o">));</span>
-<span class="c1">// 相当于 where price between (10,50) and name like '%猴头菇%' and orignal='Shanghai'</span>
+<span class="c1">// Equivalent to sql: where price between (10,50) and name like '%cat%' and orignal='Shanghai'</span>
 <span class="n">productDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="n">filter</span><span class="o">).</span><span class="na">selectThis</span><span class="o">().</span><span class="na">list</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span><span class="n">pro</span> <span class="o">-&gt;</span> <span class="o">{</span>
 	<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">pro</span><span class="o">);</span>
 <span class="o">});</span>
 </code></pre></div></div>
-<p>or</p>
+<p><strong>Example 4:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">LogicalFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="nc">Restrictions</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"orignal"</span><span class="o">,</span> <span class="s">"Shanghai"</span><span class="o">);</span>
 <span class="n">filter</span> <span class="o">=</span> <span class="n">filter</span><span class="o">.</span><span class="na">or</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"orignal"</span><span class="o">,</span> <span class="s">"New York"</span><span class="o">));</span>
-<span class="c1">// 相当于 where orignal='Shanghai' or orignal='New York'</span>
+<span class="c1">// Equivalent to sql: where orignal='Shanghai' or orignal='New York'</span>
 <span class="n">productDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="n">filter</span><span class="o">).</span><span class="na">selectThis</span><span class="o">().</span><span class="na">list</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span><span class="n">pro</span> <span class="o">-&gt;</span> <span class="o">{</span>
 	<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">pro</span><span class="o">);</span>
 <span class="o">});</span>
 </code></pre></div></div>
-<p>not</p>
+<p><strong>Example 5:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">LogicalFilter</span> <span class="n">filter</span> <span class="o">=</span> <span class="nc">Restrictions</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"orignal"</span><span class="o">,</span> <span class="s">"Shanghai"</span><span class="o">);</span>
 <span class="n">filter</span> <span class="o">=</span> <span class="n">filter</span><span class="o">.</span><span class="na">and</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"orignal"</span><span class="o">,</span> <span class="s">"New York"</span><span class="o">));</span>
 <span class="n">filter</span> <span class="o">=</span> <span class="n">filter</span><span class="o">.</span><span class="na">not</span><span class="o">();</span>
- <span class="c1">// 取反，相当于 where orignal!='Shanghai' and orignal!='New York'</span>
+ <span class="c1">// Equivalent to sql: where orignal!='Shanghai' and orignal!='New York'</span>
 <span class="n">productDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="n">filter</span><span class="o">).</span><span class="na">selectThis</span><span class="o">().</span><span class="na">list</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span><span class="n">pro</span> <span class="o">-&gt;</span> <span class="o">{</span>
 	<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">pro</span><span class="o">);</span>
 <span class="o">});</span>
 </code></pre></div></div>
-<h5 id="jpagroupby">JpaGroupBy</h5>
-<p>分组，相当于group by
-举例：</p>
+
+<h4 id="jpagroupby">JpaGroupBy</h4>
+<p>Equivalent to group by in select statement
+<strong>Example 6:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">productDao</span><span class="o">.</span><span class="na">multiquery</span><span class="o">().</span><span class="na">groupBy</span><span class="o">(</span><span class="s">"origin"</span><span class="o">).</span><span class="na">select</span><span class="o">(</span><span class="nc">Column</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">"origin"</span><span class="o">),</span> <span class="nc">Fields</span><span class="o">.</span><span class="na">count</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">toInteger</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="na">as</span><span class="o">(</span><span class="s">"count"</span><span class="o">)).</span><span class="na">list</span><span class="o">()</span>
 <span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="o">{</span>
 		<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"origin: "</span><span class="o">+</span><span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"origin"</span><span class="o">)</span> <span class="o">+</span> <span class="s">"\tcount: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"count"</span><span class="o">));</span>
@@ -251,28 +282,31 @@ multiselect()也是类似的
 <span class="c1">// Hibernate: select product0_.origin as col_0_0_, count(1) as col_1_0_ from demo_product product0_ group by product0_.origin</span>
 
 </code></pre></div></div>
-<h5 id="column">Column</h5>
-<p>表示一个列
-举例：</p>
+<h4 id="column">Column</h4>
+<p>Represent one column
+<strong>Example 7:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">productDao</span><span class="o">.</span><span class="na">multiquery</span><span class="o">().</span><span class="na">select</span><span class="o">(</span><span class="nc">Column</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">"name"</span><span class="o">),</span> <span class="nc">Column</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">"price"</span><span class="o">)).</span><span class="na">list</span><span class="o">(</span><span class="mi">10</span><span class="o">).</span><span class="na">forEach</span><span class="o">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="o">{</span>
         <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"name: "</span><span class="o">+</span><span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="o">+</span> <span class="s">"\t price: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"price"</span><span class="o">));</span>
 <span class="o">});</span>
 <span class="c1">// Hibernate: select product0_.name as col_0_0_, product0_.price as col_1_0_ from demo_product product0_ limit ?</span>
 </code></pre></div></div>
-<p>查询多个列也可以这样：</p>
+<p><strong>Example 8:</strong>
+Query multiple columns like this way：</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">productDao</span><span class="o">.</span><span class="na">multiquery</span><span class="o">().</span><span class="na">select</span><span class="o">(</span><span class="k">new</span> <span class="nc">String</span><span class="o">[]</span> <span class="o">{</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"price"</span> <span class="o">}).</span><span class="na">list</span><span class="o">(</span><span class="mi">10</span><span class="o">).</span><span class="na">forEach</span><span class="o">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="o">{</span>
 	<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"name: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="o">+</span> <span class="s">"\t price: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"price"</span><span class="o">));</span>
 <span class="o">});</span>
-<span class="c1">// 或者这样：</span>
-<span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">().</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"name"</span><span class="o">).</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"price"</span><span class="o">);</span>
+</code></pre></div></div>
+<p>Or like this way：
+<strong>Example 9:</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">().</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"name"</span><span class="o">).</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"price"</span><span class="o">);</span>
 <span class="n">productDao</span><span class="o">.</span><span class="na">multiquery</span><span class="o">().</span><span class="na">select</span><span class="o">(</span><span class="n">columnList</span><span class="o">).</span><span class="na">list</span><span class="o">(</span><span class="mi">10</span><span class="o">).</span><span class="na">forEach</span><span class="o">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="o">{</span>
 	<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"name: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="o">+</span> <span class="s">"\t price: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"price"</span><span class="o">));</span>
 <span class="o">});</span>
 </code></pre></div></div>
-<h5 id="field">Field</h5>
-<p>用来表示函数，常量等
-举例：
-聚合函数</p>
+<h4 id="field">Field</h4>
+<p>Represent aggregation function or other function, or just a number</p>
+<h6 id="aggregation-function">Aggregation Function:</h6>
+<p><strong>Example 10:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">()</span>
 				<span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="nc">BigDecimal</span><span class="o">.</span><span class="na">class</span><span class="o">),</span> <span class="s">"maxPrice"</span><span class="o">)</span>
 				<span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="nc">BigDecimal</span><span class="o">.</span><span class="na">class</span><span class="o">),</span> <span class="s">"minPrice"</span><span class="o">)</span>
@@ -283,47 +317,56 @@ multiselect()也是类似的
 	<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">vo</span><span class="o">);</span>
 <span class="o">});</span>
 </code></pre></div></div>
-<p>常用函数：
-concat</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">()</span>
-	<span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">),</span> <span class="s">"/"</span><span class="o">),</span> <span class="nc">Fields</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">)),</span> <span class="s">"repr"</span><span class="o">)</span>
-	<span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"origin"</span><span class="o">);</span>
+<h6 id="other-function">Other function</h6>
+<ul>
+  <li>concat 
+<strong>Example 10:</strong>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">concat</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">),</span> <span class="s">"/"</span><span class="o">),</span> <span class="nc">Fields</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">)),</span> <span class="s">"repr"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"origin"</span><span class="o">);</span>
 <span class="n">productDao</span><span class="o">.</span><span class="na">multiquery</span><span class="o">().</span><span class="na">groupBy</span><span class="o">(</span><span class="s">"origin"</span><span class="o">).</span><span class="na">select</span><span class="o">(</span><span class="n">columnList</span><span class="o">).</span><span class="na">setTransformer</span><span class="o">(</span><span class="nc">Transformers</span><span class="o">.</span><span class="na">asBean</span><span class="o">(</span><span class="nc">ProductVO</span><span class="o">.</span><span class="na">class</span><span class="o">)).</span><span class="na">list</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span><span class="n">vo</span> <span class="o">-&gt;</span> <span class="o">{</span>
-	<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">vo</span><span class="o">);</span>
+  <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">vo</span><span class="o">);</span>
 <span class="o">});</span>
 <span class="c1">// Hibernate: select concat(concat(max(cast(product0_.price as char)), '/'), min(cast(product0_.price as char))) as col_0_0_, product0_.origin as col_1_0_ from demo_product product0_ group by product0_.origin</span>
-</code></pre></div></div>
-<p>其他常用函数</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">()</span>
-       <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="nc">Function</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="s">"LOWER"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">"name"</span><span class="o">),</span> <span class="s">"name"</span><span class="o">)</span>
-       <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="nc">Function</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="s">"UPPER"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">"origin"</span><span class="o">),</span> <span class="s">"origin"</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>lower and upper
+<strong>Example 11:</strong>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">()</span>
+     <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="nc">Function</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="s">"LOWER"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">"name"</span><span class="o">),</span> <span class="s">"name"</span><span class="o">)</span>
+     <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="nc">Function</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="s">"UPPER"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">"origin"</span><span class="o">),</span> <span class="s">"origin"</span><span class="o">);</span>
 <span class="n">productDao</span><span class="o">.</span><span class="na">multiquery</span><span class="o">().</span><span class="na">select</span><span class="o">(</span><span class="n">columnList</span><span class="o">).</span><span class="na">list</span><span class="o">(</span><span class="mi">10</span><span class="o">).</span><span class="na">forEach</span><span class="o">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="o">{</span>
-	<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"name: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="o">+</span> <span class="s">"\t origin: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"origin"</span><span class="o">));</span>
+  <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"name: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="o">+</span> <span class="s">"\t origin: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"origin"</span><span class="o">));</span>
 <span class="o">});</span>
 <span class="c1">// Hibernate: select lower(product0_.name) as col_0_0_, upper(product0_.origin) as col_1_0_ from demo_product product0_ limit ?</span>
-</code></pre></div></div>
-<p>Case When</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">IfExpression</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;</span> <span class="n">ifExpression</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">IfExpression</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;(</span><span class="nc">Property</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">"origin"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
-		<span class="n">ifExpression</span> <span class="o">=</span> <span class="n">ifExpression</span><span class="o">.</span><span class="na">when</span><span class="o">(</span><span class="s">"Shanghai"</span><span class="o">,</span> <span class="s">"Asia"</span><span class="o">)</span>
-				                   <span class="o">.</span><span class="na">when</span><span class="o">(</span><span class="s">"Tokyo"</span><span class="o">,</span> <span class="s">"Asia"</span><span class="o">)</span>
-				                   <span class="o">.</span><span class="na">when</span><span class="o">(</span><span class="s">"New York"</span><span class="o">,</span> <span class="s">"North America"</span><span class="o">)</span>
-				                   <span class="o">.</span><span class="na">when</span><span class="o">(</span><span class="s">"Washington"</span><span class="o">,</span> <span class="s">"North America"</span><span class="o">)</span>
-				                   <span class="o">.</span><span class="na">otherwise</span><span class="o">(</span><span class="s">"Other Area"</span><span class="o">);</span>
-		<span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">().</span><span class="na">addColumn</span><span class="o">(</span><span class="n">ifExpression</span><span class="o">,</span> <span class="s">"Area"</span><span class="o">)</span>
-				                                <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">count</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">toInteger</span><span class="o">(</span><span class="mi">1</span><span class="o">)),</span> <span class="s">"Count"</span><span class="o">);</span>
-		<span class="n">productDao</span><span class="o">.</span><span class="na">multiquery</span><span class="o">().</span><span class="na">groupBy</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">toInteger</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="na">select</span><span class="o">(</span><span class="n">columnList</span><span class="o">).</span><span class="na">list</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="o">{</span>
-			<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Area: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">+</span> <span class="s">"\t Count: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">));</span>
-		<span class="o">});</span>
+</code></pre></div>    </div>
+  </li>
+  <li>case when
+<strong>Example 12:</strong>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      <span class="nc">IfExpression</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;</span> <span class="n">ifExpression</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">IfExpression</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;(</span><span class="nc">Property</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">"origin"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
+      <span class="n">ifExpression</span> <span class="o">=</span> <span class="n">ifExpression</span><span class="o">.</span><span class="na">when</span><span class="o">(</span><span class="s">"Shanghai"</span><span class="o">,</span> <span class="s">"Asia"</span><span class="o">)</span>
+                                 <span class="o">.</span><span class="na">when</span><span class="o">(</span><span class="s">"Tokyo"</span><span class="o">,</span> <span class="s">"Asia"</span><span class="o">)</span>
+                                 <span class="o">.</span><span class="na">when</span><span class="o">(</span><span class="s">"New York"</span><span class="o">,</span> <span class="s">"North America"</span><span class="o">)</span>
+                                 <span class="o">.</span><span class="na">when</span><span class="o">(</span><span class="s">"Washington"</span><span class="o">,</span> <span class="s">"North America"</span><span class="o">)</span>
+                                 <span class="o">.</span><span class="na">otherwise</span><span class="o">(</span><span class="s">"Other Area"</span><span class="o">);</span>
+      <span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">().</span><span class="na">addColumn</span><span class="o">(</span><span class="n">ifExpression</span><span class="o">,</span> <span class="s">"Area"</span><span class="o">)</span>
+                                              <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">count</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">toInteger</span><span class="o">(</span><span class="mi">1</span><span class="o">)),</span> <span class="s">"Count"</span><span class="o">);</span>
+      <span class="n">productDao</span><span class="o">.</span><span class="na">multiquery</span><span class="o">().</span><span class="na">groupBy</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">toInteger</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="na">select</span><span class="o">(</span><span class="n">columnList</span><span class="o">).</span><span class="na">list</span><span class="o">().</span><span class="na">forEach</span><span class="o">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="o">{</span>
+          <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Area: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span> <span class="o">+</span> <span class="s">"\t Count: "</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">));</span>
+      <span class="o">});</span>
 <span class="c1">// Hibernate: select case product0_.origin when 'Shanghai' then 'Asia' when 'Tokyo' then 'Asia' when 'New York' then 'North America' when 'Washington' then 'North America' else 'Other Area' end as col_0_0_, count(1) as col_1_0_ from demo_product product0_ group by 1</span>
-</code></pre></div></div>
-<h5 id="子查询示例">子查询示例</h5>
-<h6 id="示例1">示例1</h6>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h4 id="sub-query">Sub Query</h4>
+<p><strong>Example 13:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">JpaSubQuery</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">,</span><span class="nc">Order</span><span class="o">&gt;</span> <span class="n">subQuery</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">subQuery</span><span class="o">(</span><span class="nc">Order</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">"o"</span><span class="o">).</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"o"</span><span class="o">,</span> <span class="s">"id"</span><span class="o">,</span> <span class="s">"100"</span><span class="o">)).</span><span class="na">select</span><span class="o">(</span><span class="s">"o"</span><span class="o">,</span> <span class="s">"product.id"</span><span class="o">);</span>
 		<span class="nc">Product</span> <span class="n">product</span> <span class="o">=</span> <span class="n">productDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"id"</span><span class="o">,</span> <span class="n">subQuery</span><span class="o">)).</span><span class="na">selectThis</span><span class="o">().</span><span class="na">first</span><span class="o">();</span>
 		<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">product</span><span class="o">);</span>
 <span class="c1">// Hibernate: select product0_.id as id1_1_, product0_.name as name2_1_, product0_.origin as origin3_1_, product0_.price as price4_1_ from demo_product product0_ where product0_.id=(select order1_.product_id from demo_order order1_ where order1_.id=100) limit ?</span>
 </code></pre></div></div>
-<h6 id="示例2">示例2</h6>
+<p><strong>Example 14:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">JpaQuery</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">,</span><span class="nc">Order</span><span class="o">&gt;</span> <span class="n">jpaQuery</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">query</span><span class="o">();</span>
 		<span class="nc">JpaSubQuery</span><span class="o">&lt;</span><span class="nc">Product</span><span class="o">,</span> <span class="nc">BigDecimal</span><span class="o">&gt;</span> <span class="n">subQuery</span> <span class="o">=</span> <span class="n">jpaQuery</span><span class="o">.</span><span class="na">subQuery</span><span class="o">(</span><span class="nc">Product</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">"p"</span><span class="o">,</span> <span class="nc">BigDecimal</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 				<span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">avg</span><span class="o">(</span><span class="nc">Property</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">"p"</span><span class="o">,</span> <span class="s">"price"</span><span class="o">)));</span>
@@ -332,7 +375,7 @@ concat</p>
 		<span class="o">});</span>
 <span class="c1">// Hibernate: select order0_.id as id1_0_, order0_.create_time as create_t2_0_, order0_.discount as discount3_0_, order0_.price as price4_0_, order0_.product_id as product_6_0_, order0_.receiver as receiver5_0_, order0_.user_id as user_id7_0_ from demo_order order0_ where order0_.price&gt;=(select avg(product1_.price) from demo_product product1_) limit ?</span>
 </code></pre></div></div>
-<h6 id="示例3">示例3</h6>
+<p><strong>Example 15:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">JpaQuery</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">,</span><span class="nc">Order</span><span class="o">&gt;</span> <span class="n">jpaQuery</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">query</span><span class="o">();</span>
 		<span class="nc">JpaSubQuery</span><span class="o">&lt;</span><span class="nc">Product</span><span class="o">,</span> <span class="nc">BigDecimal</span><span class="o">&gt;</span> <span class="n">subQuery</span> <span class="o">=</span> <span class="n">jpaQuery</span><span class="o">.</span><span class="na">subQuery</span><span class="o">(</span><span class="nc">Product</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">"p"</span><span class="o">,</span> <span class="nc">BigDecimal</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
 				<span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="nc">Fields</span><span class="o">.</span><span class="na">avg</span><span class="o">(</span><span class="nc">Property</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">"p"</span><span class="o">,</span> <span class="s">"price"</span><span class="o">)));</span>
@@ -342,44 +385,33 @@ concat</p>
 <span class="c1">// Hibernate: select order0_.id as id1_0_, order0_.create_time as create_t2_0_, order0_.discount as discount3_0_, order0_.price as price4_0_, order0_.product_id as product_6_0_, order0_.receiver as receiver5_0_, order0_.user_id as user_id7_0_ from demo_order order0_ where 1=1 and (exists (select user1_.id from demo_user user1_ where user1_.name=order0_.receiver)) limit ?</span>
 
 </code></pre></div></div>
-<h5 id="排序示例">排序示例</h5>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">orderDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">)).</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">),</span> <span class="nc">JpaSort</span><span class="o">.</span><span class="na">asc</span><span class="o">(</span><span class="s">"price"</span><span class="o">)).</span><span class="na">selectThis</span><span class="o">().</span><span class="na">list</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+
+<h4 id="order">Order</h4>
+<p><strong>Example 16:</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">orderDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">)).</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">),</span> <span class="nc">JpaSort</span><span class="o">.</span><span class="na">asc</span><span class="o">(</span><span class="s">"price"</span><span class="o">))</span>
+                <span class="o">.</span><span class="na">selectThis</span><span class="o">().</span><span class="na">list</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
 				<span class="o">.</span><span class="na">forEach</span><span class="o">(</span><span class="n">pro</span> <span class="o">-&gt;</span> <span class="o">{</span>
 					<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">pro</span><span class="o">);</span>
 				<span class="o">});</span>
 <span class="c1">// Hibernate: select order0_.id as id1_0_, order0_.create_time as create_t2_0_, order0_.discount as discount3_0_, order0_.price as price4_0_, order0_.product_id as product_6_0_, order0_.receiver as receiver5_0_, order0_.user_id as user_id7_0_ from demo_order order0_ where order0_.price&gt;=50.0 order by order0_.create_time desc, order0_.price asc limit ?</span>
 </code></pre></div></div>
 
-<h5 id="关联查询示例">关联查询示例</h5>
-<h6 id="左连接">左连接</h6>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">Tuple</span><span class="o">&gt;</span> <span class="n">pageResponse</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">multiselect</span><span class="o">().</span><span class="na">leftJoin</span><span class="o">(</span><span class="s">"product"</span><span class="o">,</span> <span class="s">"p"</span><span class="o">)</span>
-				<span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"p"</span><span class="o">,</span> <span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">)).</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">)).</span><span class="na">selectAlias</span><span class="o">(</span><span class="s">"p"</span><span class="o">)</span>
+<h4 id="multiple-table-join-query">Multiple Table Join Query</h4>
+<p><strong>Example 17:</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">Tuple</span><span class="o">&gt;</span> <span class="n">pageResponse</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">multiselect</span><span class="o">().</span><span class="na">leftJoin</span><span class="o">(</span><span class="s">"product"</span><span class="o">,</span> <span class="s">"p"</span><span class="o">)</span>
+				<span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"p"</span><span class="o">,</span> <span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">))</span>
+                <span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">)).</span><span class="na">selectAlias</span><span class="o">(</span><span class="s">"p"</span><span class="o">)</span>
 				<span class="o">.</span><span class="na">list</span><span class="o">(</span><span class="nc">PageRequest</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">10</span><span class="o">));</span>
 		<span class="k">for</span> <span class="o">(</span><span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">Tuple</span><span class="o">&gt;</span> <span class="n">current</span> <span class="o">:</span> <span class="n">pageResponse</span><span class="o">)</span> <span class="o">{</span>
-			<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"第"</span> <span class="o">+</span> <span class="n">current</span><span class="o">.</span><span class="na">getPageNumber</span><span class="o">()</span> <span class="o">+</span> <span class="s">"页"</span><span class="o">);</span>
+			<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"PageNumber: "</span> <span class="o">+</span> <span class="n">current</span><span class="o">.</span><span class="na">getPageNumber</span><span class="o">());</span>
 			<span class="k">for</span> <span class="o">(</span><span class="nc">Tuple</span> <span class="n">tuple</span> <span class="o">:</span> <span class="n">current</span><span class="o">.</span><span class="na">getContent</span><span class="o">())</span> <span class="o">{</span>
 				<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">tuple</span><span class="o">.</span><span class="na">toArray</span><span class="o">()));</span>
 			<span class="o">}</span>
 		<span class="o">}</span>
 <span class="c1">// Hibernate: select product1_.id as id1_1_, product1_.name as name2_1_, product1_.origin as origin3_1_, product1_.price as price4_1_ from demo_order order0_ left outer join demo_product product1_ on order0_.product_id=product1_.id where product1_.price&gt;=50.0 order by order0_.create_time desc limit ?, ?</span>
 </code></pre></div></div>
-<h6 id="右连接">右连接</h6>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">();</span>
-		<span class="n">columnList</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"id"</span><span class="o">);</span>
-		<span class="n">columnList</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"u"</span><span class="o">,</span> <span class="s">"name"</span><span class="o">);</span>
-		<span class="n">columnList</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"price"</span><span class="o">);</span>
-		<span class="n">columnList</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">);</span>
-		<span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">&gt;</span> <span class="n">pageResponse</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">select</span><span class="o">().</span><span class="na">rightJoin</span><span class="o">(</span><span class="s">"user"</span><span class="o">,</span> <span class="s">"u"</span><span class="o">).</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">))</span>
-				<span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">)).</span><span class="na">select</span><span class="o">(</span><span class="n">columnList</span><span class="o">).</span><span class="na">list</span><span class="o">(</span><span class="nc">PageRequest</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">10</span><span class="o">));</span>
-		<span class="k">for</span> <span class="o">(</span><span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">&gt;</span> <span class="n">current</span> <span class="o">:</span> <span class="n">pageResponse</span><span class="o">)</span> <span class="o">{</span>
-			<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"第"</span> <span class="o">+</span> <span class="n">current</span><span class="o">.</span><span class="na">getPageNumber</span><span class="o">()</span> <span class="o">+</span> <span class="s">"页"</span><span class="o">);</span>
-			<span class="k">for</span> <span class="o">(</span><span class="nc">Order</span> <span class="n">order</span> <span class="o">:</span> <span class="n">current</span><span class="o">.</span><span class="na">getContent</span><span class="o">())</span> <span class="o">{</span>
-				<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">order</span><span class="o">);</span>
-			<span class="o">}</span>
-		<span class="o">}</span>
-  <span class="c1">// 然而运行上面代码，JPA会报错，因为JPA目前尚不支持Right Join!</span>
-</code></pre></div></div>
-<h6 id="内连接">内连接</h6>
+<p><strong>Example 18:</strong></p>
+
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">ColumnList</span> <span class="n">columnList</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ColumnList</span><span class="o">();</span>
 		<span class="n">columnList</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"id"</span><span class="o">);</span>
 		<span class="n">columnList</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"p"</span><span class="o">,</span><span class="s">"name"</span><span class="o">);</span>
@@ -387,19 +419,22 @@ concat</p>
 		<span class="n">columnList</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"price"</span><span class="o">);</span>
 		<span class="n">columnList</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">);</span>
 		<span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">Tuple</span><span class="o">&gt;</span> <span class="n">pageResponse</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">multiselect</span><span class="o">().</span><span class="na">join</span><span class="o">(</span><span class="s">"product"</span><span class="o">,</span> <span class="s">"p"</span><span class="o">)</span>
-				<span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"p"</span><span class="o">,</span> <span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">)).</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">)).</span><span class="na">select</span><span class="o">(</span><span class="n">columnList</span><span class="o">)</span>
+				<span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"p"</span><span class="o">,</span> <span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">))</span>
+                <span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">)).</span><span class="na">select</span><span class="o">(</span><span class="n">columnList</span><span class="o">)</span>
 				<span class="o">.</span><span class="na">list</span><span class="o">(</span><span class="nc">PageRequest</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">10</span><span class="o">));</span>
 		<span class="k">for</span> <span class="o">(</span><span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">Tuple</span><span class="o">&gt;</span> <span class="n">current</span> <span class="o">:</span> <span class="n">pageResponse</span><span class="o">)</span> <span class="o">{</span>
-			<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"第"</span> <span class="o">+</span> <span class="n">current</span><span class="o">.</span><span class="na">getPageNumber</span><span class="o">()</span> <span class="o">+</span> <span class="s">"页"</span><span class="o">);</span>
+			<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"PageNumber: "</span> <span class="o">+</span> <span class="n">current</span><span class="o">.</span><span class="na">getPageNumber</span><span class="o">());</span>
 			<span class="k">for</span> <span class="o">(</span><span class="nc">Tuple</span> <span class="n">tuple</span> <span class="o">:</span> <span class="n">current</span><span class="o">.</span><span class="na">getContent</span><span class="o">())</span> <span class="o">{</span>
 				<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">tuple</span><span class="o">.</span><span class="na">toArray</span><span class="o">()));</span>
 			<span class="o">}</span>
 		<span class="o">}</span>
 <span class="c1">// Hibernate: select order0_.id as col_0_0_, product1_.name as col_1_0_, product1_.price as col_2_0_, order0_.price as col_3_0_, order0_.create_time as col_4_0_ from demo_order order0_ inner join demo_product product1_ on order0_.product_id=product1_.id where product1_.price&gt;=50.0 order by order0_.create_time desc limit ?, ?</span>
 </code></pre></div></div>
-<h5 id="列表和分页查询">列表和分页查询</h5>
-<h6 id="查询订单列表">查询订单列表：</h6>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">orderDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gt</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">)).</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">)).</span><span class="na">selectThis</span><span class="o">()</span>
+
+<h4 id="list-query-and-paging-query">List Query and Paging Query</h4>
+<h6 id="list-query">List Query:</h6>
+<p><strong>Example 19:</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">orderDao</span><span class="o">.</span><span class="na">query</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gt</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">)).</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">)).</span><span class="na">selectThis</span><span class="o">()</span>
 				<span class="o">.</span><span class="na">setTransformer</span><span class="o">(</span><span class="nc">Transformers</span><span class="o">.</span><span class="na">asBean</span><span class="o">(</span><span class="nc">OrderVO</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="o">(</span><span class="n">model</span><span class="o">,</span> <span class="n">order</span><span class="o">,</span> <span class="n">output</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
 					<span class="nc">Product</span> <span class="n">product</span> <span class="o">=</span> <span class="n">order</span><span class="o">.</span><span class="na">getProduct</span><span class="o">();</span>
 					<span class="n">output</span><span class="o">.</span><span class="na">setProductName</span><span class="o">(</span><span class="n">product</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
@@ -412,10 +447,10 @@ concat</p>
 				<span class="o">});</span>
 <span class="c1">// Hibernate: select order0_.id as id1_0_, order0_.create_time as create_t2_0_, order0_.discount as discount3_0_, order0_.price as price4_0_, order0_.product_id as product_6_0_, order0_.receiver as receiver5_0_, order0_.user_id as user_id7_0_ from demo_order order0_ where order0_.price&gt;50.0 order by order0_.create_time desc limit ?</span>
 </code></pre></div></div>
-
-<h6 id="分页查询订单">分页查询订单：</h6>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">OrderVO</span><span class="o">&gt;</span> <span class="n">pageResponse</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">select</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gt</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">)).</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">))</span>
-				<span class="o">.</span><span class="na">selectThis</span><span class="o">().</span><span class="na">setTransformer</span><span class="o">(</span><span class="nc">Transformers</span><span class="o">.</span><span class="na">asBean</span><span class="o">(</span><span class="nc">OrderVO</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="o">(</span><span class="n">model</span><span class="o">,</span> <span class="n">order</span><span class="o">,</span> <span class="n">output</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+<h6 id="paging-query">Paging Query：</h6>
+<p><strong>Example 20:</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">OrderVO</span><span class="o">&gt;</span> <span class="n">pageResponse</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">select</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gt</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">50</span><span class="o">)).</span><span class="na">sort</span><span class="o">(</span><span class="nc">JpaSort</span><span class="o">.</span><span class="na">desc</span><span class="o">(</span><span class="s">"createTime"</span><span class="o">))</span>
+	<span class="o">.</span><span class="na">selectThis</span><span class="o">().</span><span class="na">setTransformer</span><span class="o">(</span><span class="nc">Transformers</span><span class="o">.</span><span class="na">asBean</span><span class="o">(</span><span class="nc">OrderVO</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="o">(</span><span class="n">model</span><span class="o">,</span> <span class="n">order</span><span class="o">,</span> <span class="n">output</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
 					<span class="nc">Product</span> <span class="n">product</span> <span class="o">=</span> <span class="n">order</span><span class="o">.</span><span class="na">getProduct</span><span class="o">();</span>
 					<span class="n">output</span><span class="o">.</span><span class="na">setProductName</span><span class="o">(</span><span class="n">product</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
 					<span class="n">output</span><span class="o">.</span><span class="na">setOrigin</span><span class="o">(</span><span class="n">product</span><span class="o">.</span><span class="na">getOrigin</span><span class="o">());</span>
@@ -424,7 +459,7 @@ concat</p>
 					<span class="n">output</span><span class="o">.</span><span class="na">setPhone</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">getPhone</span><span class="o">());</span>
 				<span class="o">})).</span><span class="na">list</span><span class="o">(</span><span class="nc">PageRequest</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">));</span>
 		<span class="k">for</span> <span class="o">(</span><span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">OrderVO</span><span class="o">&gt;</span> <span class="n">current</span> <span class="o">:</span> <span class="n">pageResponse</span><span class="o">)</span> <span class="o">{</span>
-			<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"第"</span> <span class="o">+</span> <span class="n">current</span><span class="o">.</span><span class="na">getPageNumber</span><span class="o">()</span> <span class="o">+</span> <span class="s">"页"</span><span class="o">);</span>
+			<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"PageNumber: "</span> <span class="o">+</span> <span class="n">current</span><span class="o">.</span><span class="na">getPageNumber</span><span class="o">());</span>
 			<span class="k">for</span> <span class="o">(</span><span class="nc">OrderVO</span> <span class="n">vo</span> <span class="o">:</span> <span class="n">current</span><span class="o">.</span><span class="na">getContent</span><span class="o">())</span> <span class="o">{</span>
 				<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">vo</span><span class="o">);</span>
 			<span class="o">}</span>
@@ -432,36 +467,40 @@ concat</p>
 <span class="c1">// Hibernate: select count(1) as col_0_0_ from demo_order order0_ where order0_.price&gt;50.0</span>
 <span class="c1">// Hibernate: select order0_.id as id1_0_, order0_.create_time as create_t2_0_, order0_.discount as discount3_0_, order0_.price as price4_0_, order0_.product_id as product_6_0_, order0_.receiver as receiver5_0_, order0_.user_id as user_id7_0_ from demo_order order0_ where order0_.price&gt;50.0 order by order0_.create_time desc limit ?, ?</span>
 </code></pre></div></div>
-<h6 id="分页查询会出现两条sql-一条count语句一条查询语句">分页查询会出现两条sql, 一条count语句，一条查询语句</h6>
+<p>There will be two sqls shown in console by select method when you do paging query, one is count select statement, another is select statement</p>
 
-<h5 id="删除操作">删除操作</h5>
+<h4 id="delete-operation">Delete Operation</h4>
+<p><strong>Example 21:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">productDao</span><span class="o">.</span><span class="na">delete</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gt</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">990</span><span class="o">)).</span><span class="na">execute</span><span class="o">();</span>
 <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Effected rows: "</span> <span class="o">+</span> <span class="n">rows</span><span class="o">);</span>
 <span class="c1">// Hibernate: delete from demo_product where price&gt;990.0</span>
 </code></pre></div></div>
-<h6 id="子查询删除">子查询删除:</h6>
+<h6 id="delete-operation-with-subquery">Delete Operation With SubQuery:</h6>
+<p><strong>Example 22:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">JpaSubQuery</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">,</span> <span class="nc">Order</span><span class="o">&gt;</span> <span class="n">subQuery</span> <span class="o">=</span> <span class="n">productDao</span><span class="o">.</span><span class="na">delete</span><span class="o">().</span><span class="na">subQuery</span><span class="o">(</span><span class="nc">Order</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 		<span class="n">subQuery</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="s">"product"</span><span class="o">);</span>
 		<span class="kt">int</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">productDao</span><span class="o">.</span><span class="na">delete</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">in</span><span class="o">(</span><span class="s">"id"</span><span class="o">,</span> <span class="n">subQuery</span><span class="o">).</span><span class="na">not</span><span class="o">()).</span><span class="na">execute</span><span class="o">();</span>
 		<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Effected rows: "</span> <span class="o">+</span> <span class="n">rows</span><span class="o">);</span>
 <span class="c1">// Hibernate: delete from demo_product where id not in  (select order1_.product_id from demo_order order1_)</span>
 </code></pre></div></div>
-<h5 id="更新操作">更新操作</h5>
+<h4 id="update-operation">Update Operation</h4>
+<p><strong>Example 23:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">userDao</span><span class="o">.</span><span class="na">update</span><span class="o">().</span><span class="na">set</span><span class="o">(</span><span class="s">"vip"</span><span class="o">,</span> <span class="kc">true</span><span class="o">).</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="s">"vip"</span><span class="o">,</span> <span class="kc">false</span><span class="o">)).</span><span class="na">execute</span><span class="o">();</span>
 <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Effected rows: "</span> <span class="o">+</span> <span class="n">rows</span><span class="o">);</span>
 <span class="c1">// Hibernate: update demo_user set vip=? where vip=?</span>
 </code></pre></div></div>
-<h6 id="子查询更新">子查询更新:</h6>
+<h6 id="update-operation-with-subquery">Update Operation With SubQuery:</h6>
+<p><strong>Example 24:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">JpaSubQuery</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">,</span> <span class="nc">Order</span><span class="o">&gt;</span> <span class="n">subQuery</span> <span class="o">=</span> <span class="n">userDao</span><span class="o">.</span><span class="na">update</span><span class="o">().</span><span class="na">subQuery</span><span class="o">(</span><span class="nc">Order</span><span class="o">.</span><span class="na">class</span><span class="o">).</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="mi">500</span><span class="o">)).</span><span class="na">select</span><span class="o">(</span><span class="s">"user"</span><span class="o">);</span>
 		<span class="kt">int</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">userDao</span><span class="o">.</span><span class="na">update</span><span class="o">().</span><span class="na">set</span><span class="o">(</span><span class="s">"vip"</span><span class="o">,</span> <span class="kc">true</span><span class="o">).</span><span class="na">filter</span><span class="o">(</span><span class="nc">Restrictions</span><span class="o">.</span><span class="na">in</span><span class="o">(</span><span class="s">"id"</span><span class="o">,</span> <span class="n">subQuery</span><span class="o">)).</span><span class="na">execute</span><span class="o">();</span>
 		<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Effected rows: "</span> <span class="o">+</span> <span class="n">rows</span><span class="o">);</span>
 <span class="c1">// update demo_user set vip=? where id in (select order1_.user_id from demo_order order1_ where order1_.price&gt;=500.0)</span>
 </code></pre></div></div>
-<h3 id="本地查询示例">本地查询示例</h3>
+<h3 id="native-query">Native Query</h3>
 <hr />
 
-<p>对于fastjpa操作JPA对象难以满足实际业务的场景，还是建议直接使用sql, 即本地查询</p>
-<h6 id="简单查询返回关联实体">简单查询返回关联实体</h6>
+<p>Notice: If there are some scene that FastJPA cannot meet, you’d better use native SQL directly to query 
+<strong>Example 25:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ResultSetSlice</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">&gt;</span> <span class="n">resultSetSlice</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="s">"select * from demo_order where price&gt;?"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Object</span><span class="o">[]</span> <span class="o">{</span> <span class="mi">50</span> <span class="o">});</span>
 		<span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">&gt;</span> <span class="n">pageResponse</span> <span class="o">=</span> <span class="n">resultSetSlice</span><span class="o">.</span><span class="na">list</span><span class="o">(</span><span class="nc">PageRequest</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">));</span>
 		<span class="k">for</span> <span class="o">(</span><span class="nc">PageResponse</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">&gt;</span> <span class="n">current</span> <span class="o">:</span> <span class="n">pageResponse</span><span class="o">)</span> <span class="o">{</span>
@@ -471,7 +510,7 @@ concat</p>
 			<span class="o">}</span>
 		<span class="o">}</span>
 </code></pre></div></div>
-<h6 id="分组查询及分页">分组查询及分页</h6>
+<p><strong>Example 26:</strong></p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nc">ResultSetSlice</span><span class="o">&lt;</span><span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Object</span><span class="o">&gt;&gt;</span> <span class="n">resultSetSlice</span> <span class="o">=</span> <span class="n">orderDao</span><span class="o">.</span><span class="na">selectForMap</span><span class="o">(</span>
 				<span class="s">"select origin,max(price) as maxPrice,min(price) as minPrice,avg(price) as avgPrice from demo_product group by origin"</span><span class="o">,</span>
 				<span class="k">new</span> <span class="nc">Object</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
@@ -484,9 +523,9 @@ concat</p>
 		<span class="o">}</span>
 </code></pre></div></div>
 
-<p>事实上，fastjpa是为了提升开发人员使用JPA的效率而出现的，如果出现使用fastjpa不能满足业务需求的情况，请果断使用本地sql</p>
+<p>Repeat, In fact, FastJpa purely help developers increase the productivity of using JPA, If there exists some scenes that FastJPA cannot meet, please use native SQL in your business decisively.</p>
 
-<p>最后附上启用JPA配置的核心代码, 可以直接食用</p>
+<p>JPA Configuration Reference code:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Configuration</span>
 <span class="nd">@EnableTransactionManagement</span>
 <span class="nd">@EnableJpaRepositories</span><span class="o">(</span><span class="n">repositoryFactoryBeanClass</span> <span class="o">=</span> <span class="nc">EntityDaoFactoryBean</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">basePackages</span> <span class="o">=</span> <span class="o">{</span> <span class="s">"com.demo.jpalearning.dao"</span> <span class="o">})</span>
@@ -517,7 +556,7 @@ concat</p>
 
 <span class="o">}</span>
 </code></pre></div></div>
-<p>别忘了配置文件添加：</p>
+<p>Finally, add JPA configuration to <code>application.properties</code>：</p>
 <div class="language-properties highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#Jpa Configuration
 </span><span class="py">spring.jpa.database</span><span class="p">=</span><span class="s">MYSQL</span>
 <span class="py">spring.jpa.show-sql</span><span class="p">=</span><span class="s">true</span>
@@ -526,6 +565,8 @@ concat</p>
 <span class="py">spring.jpa.hibernate.naming.physical-strategy</span><span class="p">=</span><span class="s">org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy</span>
 <span class="py">spring.jpa.properties.hibernate.dialect</span><span class="p">=</span><span class="s">org.hibernate.dialect.MySQL5InnoDBDialect</span>
 </code></pre></div></div>
-<p>源码地址：https://github.com/paganini2008/fastjpa-spring-boot-starter.git</p>
+<p>Git repository：</p>
+
+<p>https://github.com/paganini2008/fastjpa-spring-boot-starter.git</p>
 
 :ET
