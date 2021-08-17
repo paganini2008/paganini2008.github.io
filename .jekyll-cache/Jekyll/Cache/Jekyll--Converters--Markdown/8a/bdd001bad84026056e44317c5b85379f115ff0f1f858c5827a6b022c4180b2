@@ -1,0 +1,75 @@
+I"<p>介绍一款Java开源工具包系列devtools，目前由5个Java基础工具包组成。
+<strong>Maven:</strong></p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nt">&lt;dependency&gt;</span>
+			<span class="nt">&lt;groupId&gt;</span>com.github.paganini2008<span class="nt">&lt;/groupId&gt;</span>
+			<span class="nt">&lt;artifactId&gt;</span>devtools<span class="nt">&lt;/artifactId&gt;</span>
+			<span class="nt">&lt;version&gt;</span>2.0.2<span class="nt">&lt;/version&gt;</span>
+		<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+<p><strong>兼容性：</strong>
+Jdk1.8+
+<strong>组成部分：</strong></p>
+<ol>
+  <li>devtools-lang</li>
+  <li>devtools-objectpool</li>
+  <li>devtools-cron4j</li>
+  <li>devtools-beans-streaming</li>
+  <li>devtools-db4j</li>
+</ol>
+
+<p>下面，对每个工具包简单介绍一下：
+<strong>devtools-lang</strong>
+devtools-lang 是一款基础工具包，对JDK中关于基础数据类型，集合，日期，IO，多线程，JDBC, 日志等常用类库进行了二次封装。devtools-lang工具包提供了更高封装程度的工具方法和API, 旨在显著提高开发人员的开发效率，优化代码风格和增加可维护性。
+Maven:</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+	<span class="nt">&lt;groupId&gt;</span>com.github.paganini2008<span class="nt">&lt;/groupId&gt;</span>
+	<span class="nt">&lt;artifactId&gt;</span>devtools-lang<span class="nt">&lt;/artifactId&gt;</span>
+	<span class="nt">&lt;version&gt;</span>2.0.2<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+<p><strong>devtools-objectpool</strong>
+devtools-objectpool是一个对象池工具包，包含一个对象池和数据库连接池实现
+Maven:</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="nt">&lt;dependency&gt;</span>
+			<span class="nt">&lt;groupId&gt;</span>com.github.paganini2008<span class="nt">&lt;/groupId&gt;</span>
+			<span class="nt">&lt;artifactId&gt;</span>devtools-objectpool<span class="nt">&lt;/artifactId&gt;</span>
+			<span class="nt">&lt;version&gt;</span>2.0.2<span class="nt">&lt;/version&gt;</span>
+		<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+<h5 id="devtools-cron4j">devtools-cron4j</h5>
+<p>cron4j是一款小巧实用的Java调度工具包，它提供了：</p>
+<ol>
+  <li>面向API的方式来自定义cron表达式，又能将cron表达式解析为API的形式</li>
+  <li>内置多种调度器可定时执行目标内容</li>
+  <li>不依赖其他组件，可轻量化地定制自己的系统
+Maven:
+``` xml</li>
+</ol>
+<dependency>
+	<groupId>com.github.paganini2008</groupId>
+	<artifactId>devtools-cron4j</artifactId>
+	<version>2.0.2</version>
+</dependency>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>##### devtools-beans-streaming
+devtools-beans-streaming 是一个对对象列表（或称为结果集）进行查询或聚合等操作的解决方案, 类似于C#中的LINQ功能
+Maven:
+``` xml
+&lt;dependency&gt;
+	&lt;groupId&gt;com.github.paganini2008&lt;/groupId&gt;
+	&lt;artifactId&gt;devtools-beans-streaming&lt;/artifactId&gt;
+	&lt;version&gt;2.0.2&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre></div></div>
+<h5 id="devtools-db4j">devtools-db4j</h5>
+<p>devtools-db4j 是一款简单实用的JDBC操作封装工具包, 可适用于任何项目，极大地提高了基于JDBC的开发效率
+Maven:</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nt">&lt;dependency&gt;</span>
+	<span class="nt">&lt;groupId&gt;</span>com.github.paganini2008<span class="nt">&lt;/groupId&gt;</span>
+	<span class="nt">&lt;artifactId&gt;</span>devtools-db4j<span class="nt">&lt;/artifactId&gt;</span>
+	<span class="nt">&lt;version&gt;</span>2.0.2<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+<p>这里主要是对devtools系列做一个大致的介绍，后面会对每个工具包做一个详尽的使用说明</p>
+
+<p>源码地址：https://github.com/paganini2008/devtools.git</p>
+:ET

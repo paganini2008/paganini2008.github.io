@@ -1,0 +1,111 @@
+I"�<p>Devtools Lang是devtools系列中的一款基础工具包，是对JDK中关于基础数据类型，集合，日期，IO，多线程，JDBC, 日志等常用类库进行二次封装。devtools-lang工具包提供了更高封装程度的工具方法和API, 旨在显著提高开发人员的开发效率，优化代码风格和性能。</p>
+<h3 id="安装">安装：</h3>
+<hr />
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="nt">&lt;dependency&gt;</span>
+			<span class="nt">&lt;groupId&gt;</span>com.github.paganini2008<span class="nt">&lt;/groupId&gt;</span>
+			<span class="nt">&lt;artifactId&gt;</span>devtools-lang<span class="nt">&lt;/artifactId&gt;</span>
+			<span class="nt">&lt;version&gt;</span>2.0.3<span class="nt">&lt;/version&gt;</span>
+		<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+<h3 id="兼容性">兼容性：</h3>
+<hr />
+<p>Jdk1.8+</p>
+
+<h3 id="常用工具类">常用工具类：</h3>
+<hr />
+<p>StringUtils
+ObjectUtils
+ArrayUtils
+NumericUtils
+RandomUtils
+RandomStringUtils
+ClassUtils</p>
+<h3 id="关于基础数据类型的常用工具api">关于基础数据类型的常用工具API：</h3>
+<hr />
+<ol>
+  <li>Booleans</li>
+  <li>Chars</li>
+  <li>Bytes</li>
+  <li>Shorts</li>
+  <li>Ints</li>
+  <li>Longs</li>
+  <li>Floats</li>
+  <li>Doubles
+    <h3 id="关于数值计算的常用工具类">关于数值计算的常用工具类：</h3>
+    <hr />
+  </li>
+  <li>BigDecimalUtils</li>
+  <li>BigIntegerUtils
+    <h3 id="关于日期处理的常用工具类">关于日期处理的常用工具类:</h3>
+    <hr />
+  </li>
+  <li>CalendarUtils</li>
+  <li>DateUtils</li>
+  <li>LocalDateUtils
+    <h3 id="关于集合处理的常用工具类">关于集合处理的常用工具类：</h3>
+    <hr />
+  </li>
+  <li>CollectionUtils</li>
+  <li>ListUtils</li>
+  <li>SetUtils</li>
+  <li>MapUtils</li>
+  <li>LruMap</li>
+  <li>LruList</li>
+  <li>LruSet
+    <h3 id="关于io的常用工具api">关于IO的常用工具API：</h3>
+    <hr />
+  </li>
+  <li>IOUtils</li>
+  <li>FileUtils</li>
+  <li>PropertiesUtils</li>
+  <li>ResourceUtils</li>
+  <li>ImageUtils</li>
+  <li>SerializationUtils</li>
+  <li>DirectoryWalker</li>
+  <li>FileMonitor</li>
+  <li>FileComparator
+    <h3 id="关于多线程的常用工具类">关于多线程的常用工具类：</h3>
+    <hr />
+  </li>
+  <li>ExecutorUtils</li>
+  <li>ThreadsUtils</li>
+  <li>ThreadPool</li>
+  <li>ThreadFactoryBuilder</li>
+  <li>AtomicIntegerSequence</li>
+  <li>AtomicLongSequence</li>
+  <li>Latch
+    <h3 id="关于反射的常用工具类">关于反射的常用工具类：</h3>
+    <hr />
+  </li>
+  <li>ConstructorUtils</li>
+  <li>FieldUtils</li>
+  <li>MethodUtils
+    <h3 id="关于bean操作的常用工具类">关于Bean操作的常用工具类：</h3>
+    <hr />
+  </li>
+  <li>BeanUtils</li>
+  <li>PropertyUtils</li>
+  <li>EqualsBuilder</li>
+  <li>HashCodeBuilder</li>
+  <li>ToStringBuilder
+    <h3 id="关于数据类型转换操作的常用工具类">关于数据类型转换操作的常用工具类:</h3>
+    <hr />
+  </li>
+  <li>ConvertUtils</li>
+  <li>TypeConverter
+    <h3 id="关于jdbc操作的常用工具类">关于JDBC操作的常用工具类：</h3>
+    <hr />
+  </li>
+  <li>JdbcUtils</li>
+  <li>ResultSetSlice</li>
+  <li>PageableQuery</li>
+  <li>JdbcDumpTemplate
+    <h3 id="关于日志操作的常用工具类">关于日志操作的常用工具类:</h3>
+    <hr />
+  </li>
+  <li>Log</li>
+  <li>LogFactory</li>
+</ol>
+
+<p>源码地址：https://github.com/paganini2008/devtools.git</p>
+:ET
