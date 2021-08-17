@@ -1,11 +1,11 @@
 # Basic
-title: Fred Feng
-subtitle: A passionate Java programmer
+title: Vno Jekyll
+subtitle: A blog-orientation theme for Jekyll
 welcome_message: <a href="https://github.com/onevcat/vno-jekyll" target="_blank">Download the theme</a>
-description: Just a passionate Java programmer and Like coding and reading
+description: Vno Jekyll is a port of my Ghost theme vno.
 creator: <a href="http://onev.cat">@onevcat</a>
 
-url: "https://paganini2008.github.io/#blog"
+url: "http://vno.onevcat.com"
 
 permalink: /:year/:month/:title/
 
@@ -13,7 +13,7 @@ permalink: /:year/:month/:title/
 highlighter: rouge
 
 # supported colors: blue, green, purple, red, orange or slate. If you need clear, leave it empty.
-cover_color: slate
+cover_color: red
 
 # The blog button should not be removed.
 blog_button:
@@ -22,8 +22,8 @@ blog_button:
 
 # Navigation buttons in the front page.
 nav:
-    - {title: Projects, description: My Projects, url: 'https://github.com/paganini2008'}
-    - {title: Mediumn, description: My Mediumn, url: 'https://medium.com/'}
+    - {title: Projects, description: My Projects, url: 'http://project.onevcat.com'}
+    # - {title: Another Button, description: A button, url: 'http://example.com'}
 
 # Pagination
 plugins: [jekyll-paginate]
@@ -37,10 +37,11 @@ comment:
     
 # Social
 social:
-    weibo: paganini2008
-    github: paganini2008
-    twitter: paganini2008
-    mail: paganini.fy@gmail.com
+    weibo: onevcat
+    github: onevcat
+    twitter: onevcat
+    gplus: 107108267983477358170
+    mail: onev@onevcat.com
 
 # Google Analytics
 ga:

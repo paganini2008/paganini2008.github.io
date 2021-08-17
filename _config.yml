@@ -1,1 +1,48 @@
-theme: jekyll-theme-cayman
+# Basic
+title: Fred Feng
+subtitle: A passionate Java programmer
+welcome_message: <a href="https://github.com/onevcat/vno-jekyll" target="_blank">Download the theme</a>
+description: Just a passionate Java programmer and Like coding and reading
+creator: <a href="http://onev.cat">@onevcat</a>
+
+url: "https://paganini2008.github.io/#blog"
+
+permalink: /:year/:month/:title/
+
+# Format
+highlighter: rouge
+
+# supported colors: blue, green, purple, red, orange or slate. If you need clear, leave it empty.
+cover_color: slate
+
+# The blog button should not be removed.
+blog_button:
+    title: Blog
+    description: Visit blog
+
+# Navigation buttons in the front page.
+nav:
+    - {title: Projects, description: My Projects, url: 'https://github.com/paganini2008'}
+    - {title: Mediumn, description: My Mediumn, url: 'https://medium.com/'}
+
+# Pagination
+plugins: [jekyll-paginate]
+paginate: 10
+paginate_path: "page/:num/"
+
+# Comment
+comment:
+    disqus: vno-jekyll
+    # duoshuo: 
+    
+# Social
+social:
+    weibo: paganini2008
+    github: paganini2008
+    twitter: paganini2008
+    mail: paganini.fy@gmail.com
+
+# Google Analytics
+ga:
+    # id: your_ga_id
+    # host: your_host
