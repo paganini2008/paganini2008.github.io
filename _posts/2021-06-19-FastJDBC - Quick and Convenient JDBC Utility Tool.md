@@ -4,9 +4,9 @@ title: FastJDBC - A Quick and Convenient JDBC Utility Tool
 date: 2021-06-19 15:32:24.000000000 +09:00
 ---
 
-FastJDBC提供了对spring框架中NamedJdbcTemplate类的二次封装，提供一种基于注解方式的API配置方式去操作sql，而不是调用NamedJdbcTemplate的方法去传递sql语句。
+FastJDBC encapsulates the <code>NamedJdbcTemplate</code> component of spring framework, and provides another way based on Java annotation to execute SQL, rather than call <code>NamedJdbcTemplate</code> API.
 
-### 安装
+### Install
 ------------------------
 ``` xml
 		<dependency>
@@ -15,11 +15,9 @@ FastJDBC提供了对spring框架中NamedJdbcTemplate类的二次封装，提供�
 			<version>2.0.3</version>
 		</dependency>
 ```
-（以最新版为准）
 
-### 快速开始
+### Quick Start
 ------------------------
-下面举几个例子，看看fastjdbc-spring-boot-starter是怎么使用的
 ``` java
 @Dao
 public interface UserDao {
@@ -51,25 +49,29 @@ public interface UserDao {
 }
 ```
 
-API很简单，但需要的注意事项：
-1. @Insert 返回的是主键ID, 可以是int或long类型的
-2. @Update 返回的是受影响的行数，它可以执行insert, update, delete 语句
-3. @Batch 返回的也是受影响的行数
-4. @Get 可以返回对象也可以返回单个值(包装类型或基础类型)，设置属性javaType=true即可
-5. @Example 参数可以是Pojo对象也可以是Map, @Arg表示一个参数，@Args表示多个参数，用于批处理
-5. @Query 返回列表，其中@Sql表示是动态sql, 比如你可以根据查询条件动态拼装sql
-7. @Query和@Select很像，@Query，是不分页的，@Select既支持分页，又支持列表，返回ResultSetSlice对象，这个对象异常强大，有兴趣的朋友可以研究一下
-8. sql语句的写法和Spring框架中NamedParameterJdbcTemplate的写法一致，实质上还是通过它来执行sql语句的
-（API具体用法可以参考源码）
+**API notes:**
 
-最后，在你Spring Boot应用中，在你自己的Configuration类上中加入Dao扫描器即可，比如：
+1. @Insert returns the primary key ID, which can be of type int or long
+2. @Update returns the number of affected rows. It can execute insert, update and delete statements
+3. @ Batch also returns the number of affected rows, Set parameter with @Args
+4. @ Get can return an POJO or a single value (wrapper type or primitive type, set the property <code>javaType = true</code>). 
+5. @Example parameter can be a POJO object or a <code>java.utils.Map</code>, @Arg represents one parameter and @Args represents multiple parameters for @Batch operation
+6. @Query returns a list, where @SQL represents dynamic SQL. For example, you can dynamically assemble SQL text according to query conditions
+7. @Query is very similar to @Select, but @Query is non paged, @Select supports both paging and list, and returns the <code>ResultSetSlice</code> Object from [<code>devtools-lang</code>]("https://paganini2008.github.io/2021/06/Devtools-Lang-Java-Basic-Utility-Tool/"), which is very powerful. Interested friends can study it
+8. The SQL statement is written in the same way as the <code>NamedParameterJdbctemplate</code> in the spring framework. In essence, it is used to execute SQL statements
+(refer to the source code for the specific usage of API)
+
+
+
+**Finally**，add <code>@DaoScan</code> into your code and make it work, for example, <code>XXXConfiguration.java</code>
+
 ``` java
 @DaoScan(basePackages = "com.yourcompany.project.base.dao")
 @Configuration(proxyBeanMethods = false)
-public class YourConfiguration {
+public class XXXConfiguration {
 
 }
 ```
-git地址：https://github.com/paganini2008/springdessert.git
+Git Repository：https://github.com/paganini2008/springdessert.git
 
 
