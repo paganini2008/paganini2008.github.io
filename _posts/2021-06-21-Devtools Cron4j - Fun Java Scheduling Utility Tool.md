@@ -4,14 +4,13 @@ title: Devtools Cron4j - Fun Java Scheduling Utility Tool
 date: 2021-06-21 20:00:00.000000000 +09:00
 ---
 
-**Devtools Cron4j**是一款小巧实用的Java调度工具包，来自于devtools系列，它提供了：
-1. 面向对象的方式来定义或拼装cron表达式，又能将cron表达式还原为对象形式
-2. 除了支持常用的cron表达式，sdk还提供其他时间定义方式
-3. 可自定义任务，内置多种调度执行器的实现
-4. 不依赖其他组件，可轻量化地定制自己的系统
+Devtools-cron4j is a compact and practical Java scheduling  component from devtools series, which provides:
+1. Support generating a cron expression by using API method
+2. Built in multiple scheduler implementations (java.utils.Timer, java.concurrent.Executor, etc.)
+3. Support interrupt policy
 
-### 安装:
---------------------- 
+### Install:
+---------------------
 ``` xml
 		<dependency>
 			<groupId>com.github.paganini2008</groupId>
@@ -19,12 +18,13 @@ date: 2021-06-21 20:00:00.000000000 +09:00
 			<version>2.0.3</version>
 		</dependency>
 ```
-### 兼容性
+### Compatibility:
 -------------------------
 * Jdk1.8+
-### 关于如何生成cron表达式？
+
+### How to generate a cron expression？
 ---------------------
-参考例子：
+**Examples:**
 ``` java
        // */5 * * * * ?
 	public static CronExpression getCron1() {
@@ -102,7 +102,7 @@ date: 2021-06-21 20:00:00.000000000 +09:00
 	}
 ```
 
-### 如何解析cron表达式？
+### How to parse a cron expression?
 ---------------------
 ``` java
         System.out.println(CRON.parse("*/5 * * * * ?"));
@@ -116,7 +116,7 @@ date: 2021-06-21 20:00:00.000000000 +09:00
 		System.out.println(CRON.parse("0 10,20,30 12 ? 7-11 6L 2021-2025"));
 ```
 
-### 如何测试cron表达式？
+### How to test a cron expression?
 ------------------------
 ``` java
 		CRON.parse("0 30 23 L * ?").forEach(date -> {
@@ -130,7 +130,7 @@ date: 2021-06-21 20:00:00.000000000 +09:00
 		}, 20);
 ```
 
-### 如何执行调度程序？
+### How to execute a task with cron expression？
 ------------------------
 
 ``` java
@@ -159,6 +159,6 @@ date: 2021-06-21 20:00:00.000000000 +09:00
 		System.in.read();
 		executor.close();
 ```
-源码地址：https://github.com/paganini2008/devtools.git
+Git Repository：https://github.com/paganini2008/devtools.git
 
 
