@@ -57,7 +57,7 @@ public interface UserDao {
 4. @ Get can return an POJO or a single value (wrapper type or primitive type, set the property <code>javaType = true</code>). 
 5. @Example parameter can be a POJO object or a <code>java.utils.Map</code>, @Arg represents one parameter and @Args represents multiple parameters for @Batch operation
 6. @Query returns a list, where @SQL represents dynamic SQL. For example, you can dynamically assemble SQL text according to query conditions
-7. @Query is very similar to @Select, but @Query is non paged, @Select supports both paging and list, and returns the <code>ResultSetSlice</code> Object from [<code>devtools-lang</code>]("https://paganini2008.github.io/2021/06/Devtools-Lang-Java-Basic-Utility-Tool/"), which is very powerful. Interested friends can study it
+7. @Query is very similar to @Select, but @Query is non paged, @Select supports both paging and list, and returns the <code>ResultSetSlice</code> Object from [devtools-lang](https://paganini2008.github.io/2021/06/Devtools-Lang-Java-Basic-Utility-Tool/), which is very powerful. Interested friends can study it
 8. The SQL statement is written in the same way as the <code>NamedParameterJdbctemplate</code> in the spring framework. In essence, it is used to execute SQL statements
 (refer to the source code for the specific usage of API)
 
