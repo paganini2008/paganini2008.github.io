@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Devtools Cron4j: A Fun Java Scheduling Utility Tool
+title: Devtools Cron4j - A Fun Java Scheduling Utility Tool
 date: 2021-06-21 20:00:00.000000000 +09:00
 ---
 
