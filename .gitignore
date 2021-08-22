@@ -34,3 +34,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 build.sh
+
+# Eclipse
+.settings/
+.project
+

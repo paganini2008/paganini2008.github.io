@@ -4,40 +4,52 @@ title: Introduction to Greenfinger - High Performance Distributed WebSpider Fram
 date: 2021-07-01 08:30:00.000000000 +09:00
 ---
 
-**Greenfinger**是一款用Java编写的，高性能的，面向扩展的分布式网络爬虫框架，它基于SpringBoot框架，通过一些配置参数，就可以轻松地搭建一个分布式网络爬虫微服务并且可以组建集群。此外，**Greenfinger**框架还提供了大量丰富的API去定制你的应用系统。
+Greenfinger is a high-performance, extension-oriented distributed web spider framework written in Java. It is based on the SprinBoot framework. Through some parameters settings, it can easily build a distributed web spider microservice and even a microservice cluster. In addition, Greenfinger framework also provides rich APIs to customize your application system.
 
-### 框架特性
+### Feature: 
 ------------------------------
-1. 完美兼容 SpringBoot2.2.0(or later)
-2. 支持通用型和垂直型爬虫
-3. 采用深度优先爬取策略
-4. 设计成多进程高可用的爬虫架构，支持动态水平扩展和负载均衡
-5. 内置多种负载均衡算法或自定义负载均衡算法
-6. 支持全量索引和增量索引
-7. 支持定时任务来更新索引
-8. 支持多种主流的Http客户端解析技术
-9. 支持亿级URL去重
-10. 内置多种条件中断策略或自定义条件中断策略
-11. 多版本索引查询机制
+1. Perfectly compatible with SpringBoot 2.2.0 (or later)
 
-### 兼容性
+2. Support universal and vertical crawlers
+
+3. Adopt depth first crawling strategy
+
+4. It is designed as a multi process and highly available crawler architecture to support dynamic horizontal expansion and load balancing
+
+5. Built in multiple load balancing algorithms or custom load balancing algorithms
+
+6. Support full index and incremental index
+
+7. Support scheduled tasks to update indexes
+
+8. Support a variety of mainstream HTTP client parsing technologies
+
+9. Support 100 million URL uniqueness
+
+10. Built in multiple conditional interrupt policies or custom conditional interrupt policies
+
+11. Multiple version index query mechanism
+
+### Compatibility:
 -----------------------------------
 1. jdk8 (or later)
 2. SpringBoot Framework 2.2.x (or later)
 3. Redis 3.x (or later)
 4. PostgreSQL 9.x (or later)
 5. ElasticSearch 6.x (or later)
-**说明：**
-   - Redis用来存取集群信息
-   - PostgreSQL用来存取爬取到的URL信息
-   - ElasticSearch用来创建索引和提供检索功能
+
+**Notice**
+
+  - Redis is used to save cluster information
+  - PostgreSQL is used to save the crawled URL information
+  - Elasticsearch is used to create indexes and search indexes
 
 
-### 如何安装
+### Install:
 -----------------------------
-* Git地址：
+* Git Repository：
   https://github.com/paganini2008/greenfinger.git
-* 目录结构：
+* Directory Structure：
 ``` shell
 ├── greenfinger
 |  ├── greenfinger-console
@@ -50,19 +62,20 @@ date: 2021-07-01 08:30:00.000000000 +09:00
 |  ├── pom.xml
 |  └── README.md
 ```
-* 软件说明：
+* Directory Description：
   + **greenfinger-console**：
-     Greenfinger的Web版，独立的SpringBoot应用程序, 自带管理界面，可以新增、修改、启动、停止爬虫任务等, 并提供搜索界面实时查询
+     The web UI of Greenfinger, an independent SpringBoot application with its own management interface, which can add, modify, start and stop web spider tasks, and provide a search interface for real-time query
   + **greenfinger-spring-boot-starter**：
-     Greenfinger 核心jar，实现了上述所有的框架特性，对外提供了爬虫管理和搜索等Rest API, 引入jar包，可以定制你自己的系统
+     Core jar of Greenfinger, which implements all the above framework features, provides open APIs such as spider program management and search and even customize your own system with these APIs.
 
-#### 安装 greenfinger-console：
+###  Install greenfinger-console：
 ----------------------------
-  **Step1:** 进入greenfinger-console目录
-  **Step2:** 执行命令：mvn clean install
-  **Step3:** 执行成功后会多出一个目录run, 把此目录移动到你的工作目录（自己指定的目录）下即可
-  **Step4:** 运行jar: java -jar greenfinger-console-1.0-RC2.jar --spring.config.location=config/  (命令仅供参考)
-* 生成的run目录结构：
+  **Step1:** enter directory: greenfinger-console 
+  **Step2:** execute maven command：mvn clean install
+  **Step3:** After successful execution, there will be a directory named 'run'. Move this directory to your working directory (the directory specified by yourself)
+  **Step4:** run jar: java -jar greenfinger-console-1.0-RC2.jar --spring.config.location=config/  (Just reference)
+
+* Directory Structure of Run：
 ``` shell
 ├── config
 |  ├── application-dev.properties
@@ -82,11 +95,10 @@ date: 2021-07-01 08:30:00.000000000 +09:00
 └── logs
    └── atlantis
 ```
-* 参考配置：
-greenfinger-console界面用的是freemarker，目前有两个配置文件，application.properties和application-dev.properties
+* reference configuration：
+  The Web UI of greenfinger-console uses freemaker. At present, there are two configuration files, application.properties and application-dev.properties
 
-下面是greenfinger-console的默认配置（可以根据实际情况扩展）：
-application.properties 配置，主要存放一下全局配置：
+  Following is the default configuration of greenfinger-console (which can be extended according to the actual situation). The application.properties configuration mainly stores global configurations:
 ``` properties
 spring.application.name=greenfinger-console
 spring.application.cluster.name=greenfinger-console-cluster
@@ -108,7 +120,7 @@ server.servlet.context-path=/atlantis/greenfinger
 
 spring.profiles.active=dev
 ```
-application-dev.properties 配置：
+application-dev.properties：
 ``` properties
 #Jdbc Configuration
 atlantis.framework.greenfinger.datasource.jdbcUrl=jdbc:postgresql://localhost:5432/db_webanchor
@@ -146,14 +158,14 @@ webcrawler.pagesource.selenium.webdriverExecutionPath=D:\\software\\chromedriver
 logging.level.indi.atlantis.framework.greenfinger=INFO
 
 ```
-**说明：**
-application-dev.properties配置了greenfinger依赖的一些外部资源，默认情况，greenfinger将爬取到的链接信息存储在PostgesSQL，当然，你也可以存储在其他地方（比如Nosql数据库或文件格式），前面说过，greenfinger是面向扩展的网络爬虫，它提供了丰富的API去做扩展，我会在后面关于讲述greenfinger实现原理一文中详细讲解。
-上述配置中的地址信息等，你要根据自己的情况做修改
-**注意**：在jdk8下，启动greenfinger-console可能会报错（提示你jdk版本过低），所以你可能需要用jdk11的环境，本人在jdk11下可以运行成功，其他版本暂未试过。
+**Description：**
+application-dev.properties configures some external resources that Greenfinger framework depends on. By default, Greenfinger  application stores the crawled link information in PostgreSQL. Of course, you can also store it in other places (such as NoSQL database or other file system). As mentioned earlier, Greenfinger is an extension-oriented web spider, which provides rich APIs for extension, I will explain in detail in the next article about the implementation principle of Greenfinger later.
 
-#### 如何自定义你的爬虫应用程序？
+The information in the above configuration such database location, redis location should be modified according to your own situation.
+
+### How to customize your application？
 -------------------------
-Step1:  **添加 maven**:
+**Step1:  add maven**:
 ``` xml
 <dependency>
 	<groupId>com.github.paganini2008.atlantis</groupId>
@@ -161,7 +173,7 @@ Step1:  **添加 maven**:
 	<version>1.0-RC3</version>
 </dependency>
 ```
-Step2: **参考代码**:
+**Step2: Reference Configuration**:
 ``` java
 @EnableGreenFingerServer
 @SpringBootApplication
@@ -172,7 +184,7 @@ public class GreenFingerServerConsoleMain {
 	}
 }
 ```
-Step3: **参考配置**:
+**Step3: Reference Configuration**:
 ``` properties
 spring.application.name=cool-crawler
 spring.application.cluster.name=cool-crawler-cluster
@@ -210,15 +222,15 @@ spring.data.elasticsearch.properties.transport.tcp.connect_timeout=60s
 
 #logging.level.indi.atlantis.framework.greenfinger=INFO
 ```
-上述配置你可以根据自己的情况做修改
+You can modify the above configuration according to your own situation.
 
-###  Greenfinger-Console 使用介绍：
+###  Greenfinger-Console Using Guide：
 -------------------------
 * 首先，说一下**目录**和**资源**概念：
 在Greenfinger框架中，对于每一个目标网站（待爬取的网站），都被称之为**Catalog(目录)**，而对于每一个从它上面爬取下来的URL, 则代表为一个**Resource(资源)**
 * 目前Greenfinger的Web版界面还在持续改进中，所以看上去比较朴素
 
-输入首页地址：http://localhost:21212/atlantis/greenfinger/catalog/
+​        Home Page：http://localhost:21212/atlantis/greenfinger/catalog/
 
 * **查看目录列表**
 ![image.png](https://upload-images.jianshu.io/upload_images/26217505-de1d3f7bfc91edde.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -233,7 +245,7 @@ spring.data.elasticsearch.properties.transport.tcp.connect_timeout=60s
   - 【Realtime】监控爬虫运行统计等
 
 * **新建或保存目录：**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-be889fe4cccc5ed6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image.png](/assets/images/greenfinger/1.png)
 **说明：**
 + Name: 目录名称
 + Cat: 分类名称
