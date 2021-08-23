@@ -1,42 +1,42 @@
 ---
 layout: post
-title: Introduction to Chaconne - Distributed Task Scheduling Framework
+title: Introduction to Chaconne - A Distributed Task Scheduling Framework
 date: 2021-06-25 08:30:00.000000000 +09:00
 ---
 
-**chaconne**（音译夏空），是一款用Java写的，基于SpringBoot框架的轻量级的分布式任务调度框架。引入chaconne相关组件，可以非常快捷地帮助你搭建一个分布式任务集群
+**chaconne** is a lightweight distributed task scheduling framework based on the SpringBoot framework. It can help you build a distributed task cluster easily and quickly.
 
-### chaconne 特性列表
+### Chaconne Feature: 
 -----------------
-  1. 完美支持spring-boot框架（2.2.0+）
-  2. 支持多种方式设置的定时任务（Cron表达式，参数设置等）
-  3. 支持动态保存和删除任务
-  4. 支持注解配置定时任务
-  5. 支持两种集群模式（主备模式和负载均衡模式）
-  6. 内置多种负载均衡算法，支持自定义负载均衡算法
-  7. 支持失败重试和失败转移
-  8. 支持日志追踪
-  9. 支持任务参数分片处理
-10. 支持任务依赖（串行依赖和并行依赖）
- 11. 支持DAG模拟工作流
- 12. 支持任务自定义终止策略
- 13. 支持任务超时冷却和重置
- 14. 支持邮件告警
+1. Perfect support for SpringBoot framework (2.2.0 +)
+2. Support job settings in multiple ways (cron expression, parameter setting, etc.)
+3. Support dynamically saving jobs and deleting jobs operations
+4. Support configuring scheduled jobs in annotated way
+5. Support two scheduling methods in cluster mode (master slave mode and load balancing mode)
+6. Built in a variety of load balancing algorithms, supporting custom load balancing algorithms
+7. Support failure retry and failure over policy
+8. Support tracking job by logging
+9. Support job initial parameter with slice processing
+10. Support dependency of multi-jobs (serial dependency and parallel dependency)
+11. Support DAG to simulate business workflow
+12. Support customizing job termination policies
+13. Support job running timeout cooling and resetting
+14. Support email alarm for job failure
 
-### chaconne两种集群部署模式：
+### Two deployment mode of Chaconne Application Cluster：
 ----------------------------
-1. 去中心化部署模式
+1. Decentralized deployment mode
     * 没有固定的调度中心节点，chaconne集群会选举其中一个应用作为Leader, 进行任务指挥调度
    *  参与调度和参与执行的应用通过Tcp协议交互
-2. 中心化部署模式
+2. Centralized deployment mode
    * 分为调度中心和任务执行节点两个角色，且调度中心和任务执行节点都支持集群模式
    * 调度中心和任务执行节点通过Http协议交互
 
-**说明：**
+**Description：**
 这里的集群是指参与任务执行的应用所组成的集群(chaconne集群)，它和基于SpringCloud框架组成的集群是两个独立的概念
 如果chaconne集群规模较小，推荐使用去中心化部署模式，若该集群规模较大，依据实际情况，两者模式都可以使用。
 
-### chaconne框架由两部分组成：
+### Structure of the Chaconne Framework：
 --------------------------------------
 1. chaconne-spring-boot-starter  
     核心jar包，包含了chaconne全部核心功能（包括自定义你的Web管理界面）
@@ -45,7 +45,7 @@ date: 2021-06-25 08:30:00.000000000 +09:00
 3. chaconne-manager
     如果是中心化部署，这里提供了个chaconne的调度中心demo
 
-### 安装：
+### Install：
 -------------------------
 ``` xml
 <dependency>
@@ -56,9 +56,9 @@ date: 2021-06-25 08:30:00.000000000 +09:00
 ```
 （确保是最新版）
 
-### 兼容性：
+### Compatibility：
 -------------------------
-* Jdk 1.8 (or later)
+* Jdk1.8 (or later)
 * SpringBoot 2.2.0 (or later)
 * Redis 3.0 (or later)
 * MySQL 5.0 (or later)
@@ -67,7 +67,7 @@ date: 2021-06-25 08:30:00.000000000 +09:00
 Redis用于存取集群信息和做消息广播
 MySQL用于存取任务定义和运行时相关数据，目前只支持MySQL, 关于表结构，应用程序启动时自动建表
 
-### 必要的配置：
+### Required Settings：
 ------------------------
 如果是中心化配置，如下：
 ``` properties
@@ -91,11 +91,11 @@ spring.redis.messager.pubsub.channel=chaconne-management-messager-pubsub
 
 如果是去中心化配置，只要确保有Redis配置和DataSource配置即可
 
-### chaconne实现原理简述
+### Brief introduction of chaconne implementation principle
 ------------------------
 chaconne的底层是依赖tridenter-spring-boot-starter组件来实现任务集群模式的（主备模式和负载均衡模式），利用消息单播机制（通过Redis PubSub模拟）来实现任务分发和负载均衡，分片处理等高级特性。需要指出的是，chaconne框架中关于集群的定义和tridenter关于集群的定义是一致的，对于集群的概念，等同于用来区别不同的产品组或公司，同时chaconne也支持任务组的概念，它是可选配置，默认情况下，组名就是当前应用名称（${spring.application.name}），即当起了多个相同应用名的应用，那这些应用就成为了一个任务组。chaconne不仅支持跨组的任务调用，更支持跨集群的任务调用。
 
-### 如何定义任务？
+### How to define a Job？
 ---------------------------------
 1. 使用注解@ChacJob
 2. 继承ManagedJob类

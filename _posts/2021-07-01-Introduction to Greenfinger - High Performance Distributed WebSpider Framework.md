@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Introduction to Greenfinger - High Performance Distributed Web Spider Framework
+title: Introduction to Greenfinger - A High Performance Distributed Web Spider Framework
 date: 2021-07-01 08:30:00.000000000 +09:00
 ---
 
