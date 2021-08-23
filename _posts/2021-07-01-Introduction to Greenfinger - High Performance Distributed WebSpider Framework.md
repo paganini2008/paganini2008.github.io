@@ -1,10 +1,10 @@
 ---
 layout: post
-title: Introduction to Greenfinger - High Performance Distributed WebSpider Framework
+title: Introduction to Greenfinger - High Performance Distributed Web Spider Framework
 date: 2021-07-01 08:30:00.000000000 +09:00
 ---
 
-Greenfinger is a high-performance, extension-oriented distributed web spider framework written in Java. It is based on the SprinBoot framework. Through some parameters settings, it can easily build a distributed web spider microservice and even a microservice cluster. In addition, Greenfinger framework also provides rich APIs to customize your application system.
+**Greenfinger** is a high-performance, extension-oriented distributed web spider framework written in Java. It is based on the SpringBoot framework. Through some parameters settings, it can easily build a distributed web spider microservice and even a microservice cluster. In addition, **Greenfinger** framework also provides rich APIs to customize your application system.
 
 ### Feature: 
 ------------------------------
@@ -40,9 +40,9 @@ Greenfinger is a high-performance, extension-oriented distributed web spider fra
 
 **Notice**
 
-  - Redis is used to save cluster information
-  - PostgreSQL is used to save the crawled URL information
-  - Elasticsearch is used to create indexes and search indexes
+  - **Redis** is used to save cluster information
+  - **PostgreSQL** is used to save the crawled URL information
+  - **Elasticsearch** is used to create indexes and search indexes
 
 
 ### Install:
@@ -64,16 +64,16 @@ Greenfinger is a high-performance, extension-oriented distributed web spider fra
 ```
 * Directory Description：
   + **greenfinger-console**：
-     The web UI of Greenfinger, an independent SpringBoot application with its own management interface, which can add, modify, start and stop web spider tasks, and provide a search interface for real-time query
+     The Web UI of Greenfinger application, an independent SpringBoot application with its own management interface, which can add, modify, start and stop web spider tasks, and provide a search interface for real-time query
   + **greenfinger-spring-boot-starter**：
-     Core jar of Greenfinger, which implements all the above framework features, provides open APIs such as spider program management and search and even customize your own system with these APIs.
+     Core jar of Greenfinger application, which implements all the above framework features, provides open APIs such as spider program management and search and even customize your own system with these APIs.
 
-###  Install greenfinger-console：
+###  Install Greenfinger Console：
 ----------------------------
   **Step1:** enter directory: greenfinger-console 
-  **Step2:** execute maven command：mvn clean install
+  **Step2:** execute maven with <code>mvn clean install</code>
   **Step3:** After successful execution, there will be a directory named 'run'. Move this directory to your working directory (the directory specified by yourself)
-  **Step4:** run jar: java -jar greenfinger-console-1.0-RC2.jar --spring.config.location=config/  (Just reference)
+  **Step4:** run jar with <code>java -jar greenfinger-console-1.0-RC2.jar --spring.config.location=config/ </code> (Just reference)
 
 * Directory Structure of Run：
 ``` shell
@@ -96,9 +96,11 @@ Greenfinger is a high-performance, extension-oriented distributed web spider fra
    └── atlantis
 ```
 * reference configuration：
-  The Web UI of greenfinger-console uses freemaker. At present, there are two configuration files, application.properties and application-dev.properties
+  
 
-  Following is the default configuration of greenfinger-console (which can be extended according to the actual situation). The application.properties configuration mainly stores global configurations:
+Here are configuration files, <code>application.properties</code> and <code>application-dev.properties</code>, which can be extended according to the actual situation. 
+
+  - <code>application.properties</code> mainly configure some global settings:
 ``` properties
 spring.application.name=greenfinger-console
 spring.application.cluster.name=greenfinger-console-cluster
@@ -120,7 +122,10 @@ server.servlet.context-path=/atlantis/greenfinger
 
 spring.profiles.active=dev
 ```
-application-dev.properties：
+Greenfinger Console uses freemarker as Web UI by default. 
+
+<code>application-dev.properties</code> mainly configure some settings that might be changed:
+
 ``` properties
 #Jdbc Configuration
 atlantis.framework.greenfinger.datasource.jdbcUrl=jdbc:postgresql://localhost:5432/db_webanchor
@@ -159,13 +164,14 @@ logging.level.indi.atlantis.framework.greenfinger=INFO
 
 ```
 **Description：**
-application-dev.properties configures some external resources that Greenfinger framework depends on. By default, Greenfinger  application stores the crawled link information in PostgreSQL. Of course, you can also store it in other places (such as NoSQL database or other file system). As mentioned earlier, Greenfinger is an extension-oriented web spider, which provides rich APIs for extension, I will explain in detail in the next article about the implementation principle of Greenfinger later.
+<code>application-dev.properties</code> configures some external resources that Greenfinger framework depends on. By default, Greenfinger  application stores the crawled link information in PostgreSQL. Of course, you can also store it in other places (such as NoSQL database or other file system). As mentioned earlier, Greenfinger is an extension-oriented web spider framework, which provides rich APIs for extension, I will explain in detail in the next article about the implementation principle of Greenfinger later.
 
-The information in the above configuration such database location, redis location should be modified according to your own situation.
+The information in the above configuration such as database location, redis location should be modified according to your own situation.
 
 ### How to customize your application？
 -------------------------
-**Step1:  add maven**:
+**Step1**:  add dependency in your pom.xml:
+
 ``` xml
 <dependency>
 	<groupId>com.github.paganini2008.atlantis</groupId>
@@ -173,7 +179,8 @@ The information in the above configuration such database location, redis locatio
 	<version>1.0-RC3</version>
 </dependency>
 ```
-**Step2: Reference Configuration**:
+**Step2**: add <code>@EnableGreenFingerServer</code> on the main.java:
+
 ``` java
 @EnableGreenFingerServer
 @SpringBootApplication
@@ -184,7 +191,8 @@ public class GreenFingerServerConsoleMain {
 	}
 }
 ```
-**Step3: Reference Configuration**:
+**Step3**:  modify reference configuration if required:
+
 ``` properties
 spring.application.name=cool-crawler
 spring.application.cluster.name=cool-crawler-cluster
@@ -224,43 +232,53 @@ spring.data.elasticsearch.properties.transport.tcp.connect_timeout=60s
 ```
 You can modify the above configuration according to your own situation.
 
-###  Greenfinger-Console Using Guide：
+###  Greenfinger Console Using Guide：
 -------------------------
-* 首先，说一下**目录**和**资源**概念：
-在Greenfinger框架中，对于每一个目标网站（待爬取的网站），都被称之为**Catalog(目录)**，而对于每一个从它上面爬取下来的URL, 则代表为一个**Resource(资源)**
-* 目前Greenfinger的Web版界面还在持续改进中，所以看上去比较朴素
+Understanding the meaning of **Catalog** and **Resource:**
+* **Catalog**: a website that will be crawled
+* *Resource**: a URL that is crawled from a catalog
 
-​        Home Page：http://localhost:21212/atlantis/greenfinger/catalog/
+Home Page：http://localhost:21212/atlantis/greenfinger/catalog/
 
-* **查看目录列表**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-de1d3f7bfc91edde.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-**操作说明：**
-  - 【Edit】 编辑目录
-  -  【Delete】删除目录（包括目录下的资源和索引）
-  - 【Clean】 清理目录（包括目录下的资源和索引，但目录还在，版本号归 0）
-  - 【Rebuild】重构目录（即开启一个爬虫，重新爬取该目录，并建索引，版本号递增）
-  -  【Update】更新目录（即开启一个爬虫，接着最近的一次爬取地址继续爬取和更新目录，并建索引，版本号不变）
-*当爬虫运行的时候，你还可以：*
-  - 【Stop】停止爬虫运行
-  - 【Realtime】监控爬虫运行统计等
+* **Catalog List**
+  ![image.png](/assets/images/greenfinger/1.png)
+  **Description：**
+  
+- 【Edit】 Edit Catalog
+  
+- 【Delete】Delete directory (including resources and indexes under the directory)
+  
+- 【Clean】 Clean up the directory (including the resources and indexes under the directory, but the directory is still there, and the version number is set to 0)
+  
+- 【Rebuild】Reconstruct the directory (start a web spider, crawl the directory again, build an index, and increase the version number)
+  
+- 【Update】Update the directory (start a web spider, then continue to crawl and update the directory from the latest resource, and build an index, with the version number unchanged)
+  
+  *When the crawler is running, you can also:*
+  
+- 【Stop】Stop running a web spider
+  
+- 【Realtime】Watching real-time statistics when a web spider works
+  
+* **Save Catalog：**
+  ![image.png](/assets/images/greenfinger/2.png)
+  **说明：**
 
-* **新建或保存目录：**
-![image.png](/assets/images/greenfinger/1.png)
-**说明：**
-+ Name: 目录名称
-+ Cat: 分类名称
-+ URL: 初始地址
-+ Page Encoding: 页面编码
-+ Path Pattern: URL匹配模式，可以多个，逗号分隔
-+ Excluded Path Pattern: 排除的URL匹配模式，可以多个，逗号分隔
-+ Max Fetch Size: 最大爬取的链接数量（默认100000）
-+ Duration: 爬虫的运行时间，输入毫秒值（默认20分钟），即超过此时间，爬虫就自动结束爬取工作
+  + **Name**: catalog name
+  + **Cat**: category of catalogs
+  + **URL**: the started url      (e.g.  http://www.example.com)
+  + **Page Encoding**: encoding of page content    (e.g.  UTF-8, ISO-8859-1)
+  + **Path Pattern**: URL matching pattern, more patterns are separated by ","           (e.g. http://www/example.com/foo/\*\*, http://www/example.com/bar/\*\*)
+  + **Excluded Path Pattern**: Excluded URL matching pattern，more patterns are separated by ","
+  + **Max Fetch Size**: Maximum number of links crawled（100000 by default）
+  + **Duration**: The running time (milliseconds) of a web spider  (20 minutes by default), that means  beyond this time, the web spider will automatically end the crawling work.
 
-* **监控爬虫运行情况：**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-bfb4c25f909a9751.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-* **爬虫一边在爬，你也可以实时地用关键字搜索：**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-dd71cb01cface83c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-* **不输关键字，则查询全部：**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-f9a8e1d36bc5b837.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+* **Observe the statistics of a running web spider：**
+![image.png](/assets/images/greenfinger/3.png)
+* **While the crawler is crawling, you can also search with keywords in real-time:**
+![image.png](/assets/images/greenfinger/4.png)
+* **If no keyword is entered, all items will be queried：**
+![image.png](/assets/images/greenfinger/5.png)
 
-最后，由于Greenfinger框架复杂度较高，它综合运用了微服务分布式协作框架[tridenter](https://www.jianshu.com/p/fdd0e962d7a4)、分布式流式处理框架[vortex](https://www.jianshu.com/p/c6eb9a1e850c)、分布式任务调度框架[chaconne](https://www.jianshu.com/p/9895bab1b682) 3个框架的核心内容，所以本篇主要讲述的是如何操作Greenfinger-Console界面来创建爬虫任务，运行爬虫，最后关键字搜索爬取到的内容，限于篇幅，后面会着重写一篇关于Greenfinger实现原理的文章。
+Finally, due to the high complexity of Greenfinger Framework, it comprehensively uses the core functions of three frameworks: Micro service distributed collaboration framework [Trident], distributed streaming processing framework [vortex] and distributed task scheduling framework [chaconne]. Therefore, this paper mainly describes how to operate Greenfinger Console Web UI to create web spider tasks, run them, and search content by keyword. I will write an article about the implementation principle of Greenfinger Framework later.
+
