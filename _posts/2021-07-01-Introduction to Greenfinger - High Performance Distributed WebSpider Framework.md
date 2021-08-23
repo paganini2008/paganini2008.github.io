@@ -70,10 +70,10 @@ date: 2021-07-01 08:30:00.000000000 +09:00
 
 ###  Install Greenfinger Console：
 ----------------------------
-  **Step1:** enter directory: greenfinger-console 
-  **Step2:** execute maven with <code>mvn clean install</code>
-  **Step3:** After successful execution, there will be a directory named 'run'. Move this directory to your working directory (the directory specified by yourself)
-  **Step4:** run jar with <code>java -jar greenfinger-console-1.0-RC2.jar --spring.config.location=config/ </code> (Just reference)
+  1. enter directory: greenfinger-console 
+  2. execute maven with <code>mvn clean install</code>
+  3. After successful execution, there will be a directory named 'run'. Move this directory to your working directory (the directory specified by yourself)
+  4. run jar with <code>java -jar greenfinger-console-1.0-RC2.jar --spring.config.location=config/ </code> (Just reference)
 
 * Directory Structure of Run：
 ``` shell
@@ -280,5 +280,5 @@ Home Page：http://localhost:21212/atlantis/greenfinger/catalog/
 * **If no keyword is entered, all items will be queried：**
 ![image.png](/assets/images/greenfinger/5.png)
 
-Finally, due to the high complexity of Greenfinger Framework, it comprehensively uses the core functions of three frameworks: Micro service distributed collaboration framework [Trident], distributed streaming processing framework [vortex] and distributed task scheduling framework [chaconne]. Therefore, this paper mainly describes how to operate Greenfinger Console Web UI to create web spider tasks, run them, and search content by keyword. I will write an article about the implementation principle of Greenfinger Framework later.
+Finally, due to the high complexity of Greenfinger Framework, it comprehensively uses the core functions of three frameworks: Micro service distributed collaboration framework [tridenter], distributed streaming processing framework [vortex] and distributed task scheduling framework [chaconne]. Therefore, this paper mainly describes how to operate Greenfinger Console Web UI to create web spider tasks, run them, and search content by keyword. I will write an article about the implementation principle of Greenfinger Framework later.
 
