@@ -1,19 +1,19 @@
 ---
 layout: post
-title: Devtools Lang - Java Basic Utility Tool
+title: Devtools Lang - A Java Common Utility Component
 date: 2021-06-21 08:30:00.000000000 +09:00
 ---
 
-<code>Devtools Lang</code> is a basic toolkit from <code>Devtools</code> series. It encapsulates some common Java class libraries, such as primitive data types, Collection, Date, IO, Thread, JDBC, Log, etc. <code>Devtools Lang</code> provides interfaces and methods with a higher encapsulation level of API, which aims to significantly improve the development efficiency of developers and optimize code style and performance.
+<code>Devtools Lang</code> is a basic component from <code>Devtools</code> series. It encapsulates some common Java class libraries, such as primitive data types, Collection, Date, IO, Thread, JDBC, Log, etc. <code>Devtools Lang</code> provides interfaces and methods with a higher encapsulation level of API, which aims to significantly improve the development efficiency of developers and optimize code style and performance.
 
 ### Install：
 ----------------------
 ``` xml
-		<dependency>
-			<groupId>com.github.paganini2008</groupId>
-			<artifactId>devtools-lang</artifactId>
-			<version>2.0.3</version>
-		</dependency>
+<dependency>
+	<groupId>com.github.paganini2008</groupId>
+	<artifactId>devtools-lang</artifactId>
+	<version>2.0.3</version>
+</dependency>
 ```
 ### Compatibility：
 ---------------------

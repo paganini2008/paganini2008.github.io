@@ -1,10 +1,10 @@
 ---
 layout: post
-title: FastJPA - Graceful Utility Tool of JPA
+title: FastJPA - A Graceful Utility Component of JPA
 date: 2021-06-22 08:30:00.000000000 +09:00
 ---
 
-FastJPA is a component based on SpringBoot framework. It encapsulates majority JPA operation offered by SpringBoot framework and provides an object-oriented way to operate JPQL or HQL. It aims to help developer write SQL less and use tool more, thereby quickly improving development efficiency and making code more elegant and readable
+FastJPA is a component based on SpringBoot framework. It encapsulates majority of JPA operation offered by SpringBoot framework and provides an object-oriented way to operate JPQL or HQL. It aims to help developer write SQL less and use tool more, thereby quickly improving development efficiency and making code more elegant and readable
 
 ### Feature：
 ---------------------------
