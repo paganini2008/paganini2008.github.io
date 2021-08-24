@@ -26,24 +26,25 @@ date: 2021-06-25 08:30:00.000000000 +09:00
 ### Two deployment mode of Chaconne Application Cluster：
 ----------------------------
 1. Decentralized deployment mode
-    * 没有固定的调度中心节点，chaconne集群会选举其中一个应用作为Leader, 进行任务指挥调度
-   *  参与调度和参与执行的应用通过Tcp协议交互
+    * No fixed scheduling center role, the chaconne cluster will elect one of the applications as a leader for job scheduling
+   *  Applications participating in scheduling and execution interact through TCP protocol
 2. Centralized deployment mode
-   * 分为调度中心和任务执行节点两个角色，且调度中心和任务执行节点都支持集群模式
-   * 调度中心和任务执行节点通过Http协议交互
+   * It is divided into two roles: scheduling center and job executor, and both scheduling center and job executor support cluster mode
+   * The scheduling center interacts with the job executor  through HTTP protocol
 
 **Description：**
-这里的集群是指参与任务执行的应用所组成的集群(chaconne集群)，它和基于SpringCloud框架组成的集群是两个独立的概念
-如果chaconne集群规模较小，推荐使用去中心化部署模式，若该集群规模较大，依据实际情况，两者模式都可以使用。
+The cluster here refers to the cluster composed of applications participating in job execution (chaconne cluster). It is an independent concept from the cluster composed of SpringCloud framework
+
+If the chaconne cluster is small, the decentralized deployment mode is recommended. If the cluster is large, both modes can be used according to the actual situation.
 
 ### Structure of the Chaconne Framework：
 --------------------------------------
 1. chaconne-spring-boot-starter  
-    核心jar包，包含了chaconne全部核心功能（包括自定义你的Web管理界面）
+    The core jar of chaconne, which contains all the core functions of chaconne  (including the external API of the Web UI)
 2. chaconne-console
-    Chaconne Web管理界面，进行任务管理和查看任务运行状态
+    Chaconne Web UI，Doing job management and query job running status
 3. chaconne-manager
-    如果是中心化部署，这里提供了个chaconne的调度中心demo
+    If centralized deployment is adopted, you can refer this demo of scheduling center
 
 ### Install：
 -------------------------
@@ -54,7 +55,7 @@ date: 2021-06-25 08:30:00.000000000 +09:00
      <version>1.0-RC3</version>
 </dependency>
 ```
-（确保是最新版）
+（Please use the latest version）
 
 ### Compatibility：
 -------------------------
@@ -63,13 +64,12 @@ date: 2021-06-25 08:30:00.000000000 +09:00
 * Redis 3.0 (or later)
 * MySQL 5.0 (or later)
 
-**说明：**
-Redis用于存取集群信息和做消息广播
-MySQL用于存取任务定义和运行时相关数据，目前只支持MySQL, 关于表结构，应用程序启动时自动建表
+**Description：**
+- Redis is used to access cluster information and broadcast messages
+- MySQL is used to save job definition and runtime related data. At present, it only supports MySQL. Relevant Tables will be created automatically when the application starts
 
 ### Required Settings：
 ------------------------
-如果是中心化配置，如下：
 ``` properties
 spring.application.cluster.name=jobtester-cluster  # set chaconne cluster name
 spring.application.name=jobtester
@@ -89,24 +89,22 @@ atlantis.framework.redis.database=0
 spring.redis.messager.pubsub.channel=chaconne-management-messager-pubsub
 ```
 
-如果是去中心化配置，只要确保有Redis配置和DataSource配置即可
-
 ### Brief introduction of chaconne implementation principle
 ------------------------
-chaconne的底层是依赖tridenter-spring-boot-starter组件来实现任务集群模式的（主备模式和负载均衡模式），利用消息单播机制（通过Redis PubSub模拟）来实现任务分发和负载均衡，分片处理等高级特性。需要指出的是，chaconne框架中关于集群的定义和tridenter关于集群的定义是一致的，对于集群的概念，等同于用来区别不同的产品组或公司，同时chaconne也支持任务组的概念，它是可选配置，默认情况下，组名就是当前应用名称（${spring.application.name}），即当起了多个相同应用名的应用，那这些应用就成为了一个任务组。chaconne不仅支持跨组的任务调用，更支持跨集群的任务调用。
+The bottom layer of chaconne relies on the <code>tridenter-spring-boot-starter</code> component to realize the task cluster mode (active standby mode and load balancing mode), and uses the message unicast mechanism (simulated by Redis PubSub) to realize task distribution, load balancing, fragment processing and other advanced features. Note that the definition of cluster in chaconne framework is consistent with that in <code>tridenter-spring-boot-starter</code>. The concept of cluster is equivalent to distinguishing different product groups or companies. At the same time, chaconne also supports the concept of task group, which is an optional configuration. By default, the group name is the current application name (${spring. Application. Name}), If there are multiple applications with the same application name, these applications become a task group. Chaconne supports not only cross group task calls, but also cross cluster task calls.
 
 ### How to define a Job？
 ---------------------------------
-1. 使用注解@ChacJob
-2. 继承ManagedJob类
-3. 实现Job接口
-4. 实现NotManagedJob接口
-说明：
-* 前3种定义任务的方式属于声明式（编程式）定义任务，即通过代码方式定义一个任务，随之Spring框架上下文的启动而自动加载
-* 第4种定义的方式用来定义动态任务，用户可以在Web界面上（Chaconne-Console）提交来创建任务或直接通过调用Http API/SDK来创建任务，需要说明的是，通过该方式创建的任务对象不属于Spring上下文托管的Bean对象。
+1. Using annotation <code>@ChacJob</code>
+2. Inherit <code>ManagedJob</code>
+3. Implements <code>Job</code>
+4. Implements <code>NotManagedJob</code>
+**Description：**
+  - The first three methods of defining Job belong to declarative (programming) definition, In other word, a task is defined in code and loaded automatically with the start of the Spring Framework context
+  - The last definition method is used to define dynamic tasks. Users can submit to create jobs on the Web UI (Chaconne Console) or directly create tasks by calling HTTP API / SDK. Note that the job objects created by this way do not belong to bean objects managed by Spring Application Context
 
-**示例代码：**
-**1. 用注解方式创建任务**
+**Examples：**
+* Creating a Job by annotation
 ``` java
 @ChacJob
 @ChacTrigger(cron = "*/5 * * * * ?")
@@ -131,8 +129,7 @@ public class DemoCronJob {
 }
 ```
 
-**2. 接口方式创建任务**
-* 实现Job接口：
+* Creating a Job by implementing  <code>Job</code>
 ``` java
 @Component
 public class HelloWorldJob implements Job {
@@ -181,7 +178,7 @@ public class HelloWorldJob implements Job {
 
 }
 ```
-* 或继承ManagedJob类：
+*  Creating a Job by inherit  <code>ManagedJob</code>
 ``` java
 @Component
 public class HealthCheckJob extends ManagedJob {
@@ -219,11 +216,15 @@ public class HealthCheckJob extends ManagedJob {
 
 }
 ```
-**如何动态任务？**
-**第一种方式：**在页面上创建（后面会讲到）
-略
-**第二种方式：**通过SDK创建
-* 首先实现NotManagedJob 接口定义任务
+#### How to create a dynamic task?
+1. Create on the Web UI
+
+   (Described Later)
+
+   
+
+2. Create by API
+* Creating a Job by inherit  <code>NotManagedJob</code>
 ``` java
 public class EtlJob implements NotManagedJob {
 
@@ -235,7 +236,7 @@ public class EtlJob implements NotManagedJob {
 
 }
 ```
-* 使用Http API调用的方式
+* Using HTTP API
 POST  http://localhost:6543/job/admin/persistJob
 ``` json
 {
@@ -267,7 +268,7 @@ POST  http://localhost:6543/job/admin/persistJob
     "attachment": "{\"initialParameter\": \"test\"}"
 }
 ```
-* 或者使用SDK:
+* Using SDK
 ``` java
 @Component
 public class TestService {
@@ -291,18 +292,20 @@ public class TestService {
 
 }
 ```
-**注意：** 任务初始化参数建议是json格式的
+**Note：** It is recommended that the job initializing parameter is in JSON format.
 
-### 任务依赖
+### Job dependency
 ----------------------------
-任务依赖是**chaconne**框架的重要特性之一，任务依赖分为**串行依赖**和**并行依赖**，
-所谓串行依赖是指任务A做完接着执行任务B,  即任务B依赖任务A。
-并行依赖是指，比如有3个任务，分别为任务A, 任务B, 任务C, 任务A和任务B都做完才能执行任务C, 类似会签的业务场景。
-串行依赖和并行依赖都可以共享任务上下文参数和运行结果，并且支持自定义判断策略来决定要不要触发下游任务。
-##### DAG(有向无环图)
-而在结合串行依赖和并行依赖的基础上，chaconne框架又提供了DAG功能并提供了友好的API，来模拟类似工作流的业务场景，更加丰富了任务依赖的使用场景。
-（这里为了方便举例，都通过注解的方式配置任务)
-##### 串行依赖示例：
+Job dependency is one of the important features of Chaconne Framework. Job dependency can be divided into **Serial Dependency** and **Parallel Dependency**.
+Serial dependency means that Job A is completed and then Job B will be executed, We can see Job B depends on Job A.
+So what does parallel dependency? For example, there are three tasks, Job A, Job B, and Job C. Job C can only be executed after Job A and Job B are all completed, which is similar to countersignature.
+Both serial dependency and parallel dependency can share job initializing parameters and running results during the job execution, and support user-defined judgment strategies to decide whether to trigger downstream tasks.
+
+#### DAG (Directed Acyclic Graph)
+Based on the combination of serial dependency and parallel dependency, Chaconne Framework provides DAG function and friendly API to simulate business scenarios similar to workflow, which enriches the use scenarios of task dependency.
+(for the convenience of examples, tasks are configured by annotation)
+
+* Serial Dependency
 ``` java
 @ChacJob
 @ChacTrigger(triggerType = TriggerType.DEPENDENT)
@@ -327,10 +330,14 @@ public class DemoDependentJob {
 
 }
 ```
-##### 并行依赖示例：
-有3个任务，DemoTask, DemoTaskOne, DemoTaskTwo
-让DemoTaskOne, DemoTaskTwo都做完再执行DemoTask，且DemoTask可以获得DemoTaskOne, DemoTaskTwo执行后的值
-###### DemoTaskOne: 
+
+* Parallel dependency：
+Here are three Jobs，<code>DemoTask</code>, <code>DemoTaskOne</code>, <code>DemoTaskTwo</code>
+
+Let DemoTaskOne and DemoTaskTwo finish before executing DemoTask, and DemoTask can get the result data of DemoTaskOne and DemoTaskTwo after execution
+
+**DemoTaskOne.java** 
+
 ``` java
 @ChacJob
 @ChacTrigger(triggerType = TriggerType.SIMPLE)
@@ -354,7 +361,7 @@ public class DemoTaskOne {
 
 }
 ```
-###### DemoTaskTwo:
+**DemoTaskTwo.java**
 ``` java
 @ChacJob
 @ChacTrigger(triggerType = TriggerType.SIMPLE)
@@ -379,7 +386,7 @@ public class DemoTaskTwo {
 }
 
 ```
-###### DemoTask:
+**DemoTask.java**
 ``` java
 @ChacJob
 @ChacTrigger(cron = "0 0/1 * * * ?", triggerType = TriggerType.CRON)
@@ -411,8 +418,9 @@ public class DemoTask {
 
 }
 ```
-##### DAG任务示例
-DAG任务目前只支持API创建, 后续会持续改进，增加界面方式创建DAG任务
+
+*  Create a DAG
+Dag Jobs only support API creation at present
 ``` java
 @RequestMapping("/dag")
 @RestController
@@ -445,109 +453,12 @@ public class DagJobController {
 ```
 上面的DAG示例说明一下，chaconne框架提供的DAG模型支持串行流入，即flow模式，也提供了fork模式进行并行处理，上例中，任务demoDag fork了两个子进程（“demoDagOne”和“demoDagTwo”），即demoDagOne和demoDagTwo同时处理完了再触发demoDag任务。
 
-### Chaconne部署说明
--------------------------------
-chaconne除了依托SpringBoot框架外，默认用MySQL存储任务信息(目前仅支持MySQL，后续会支持更多类型的数据库),  用Redis保存集群元数据和进行消息广播。
-所以无论使用哪种部署方式，你都需要在你的应用中设置DataSource和RedisConnectionFactory
-**示例代码：**
-``` java
-@Slf4j
-@Configuration
-public class ResourceConfig {
+### Deployment description
+--------------------------
 
-	@Setter
-	@Configuration(proxyBeanMethods = false)
-	@ConfigurationProperties(prefix = "spring.datasource")
-        @ConditionalOnMissingBean(DataSource.class)
-	public static class DataSourceConfig {
-
-		private String jdbcUrl;
-		private String username;
-		private String password;
-		private String driverClassName;
-
-		private HikariConfig getDbConfig() {
-			if (log.isTraceEnabled()) {
-				log.trace("DataSourceConfig JdbcUrl: " + jdbcUrl);
-				log.trace("DataSourceConfig Username: " + username);
-				log.trace("DataSourceConfig Password: " + password);
-				log.trace("DataSourceConfig DriverClassName: " + driverClassName);
-			}
-			final HikariConfig config = new HikariConfig();
-			config.setDriverClassName(driverClassName);
-			config.setJdbcUrl(jdbcUrl);
-			config.setUsername(username);
-			config.setPassword(password);
-			config.setMinimumIdle(5);
-			config.setMaximumPoolSize(50);
-			config.setMaxLifetime(60 * 1000);
-			config.setIdleTimeout(60 * 1000);
-			config.setValidationTimeout(3000);
-			config.setReadOnly(false);
-			config.setConnectionInitSql("SELECT UUID()");
-			config.setConnectionTestQuery("SELECT 1");
-			config.setConnectionTimeout(60 * 1000);
-			config.setTransactionIsolation("TRANSACTION_READ_COMMITTED");
-
-			config.addDataSourceProperty("cachePrepStmts", "true");
-			config.addDataSourceProperty("prepStmtCacheSize", "250");
-			config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-			return config;
-		}
-
-		@Primary
-		@Bean
-		public DataSource dataSource() {
-			return new HikariDataSource(getDbConfig());
-		}
-
-	}
-
-	@Setter
-	@Configuration(proxyBeanMethods = false)
-	@ConfigurationProperties(prefix = "spring.redis")
-        @ConditionalOnMissingBean(RedisConnectionFactory.class)
-	public static class RedisConfig {
-
-		private String host;
-		private String password;
-		private int port;
-		private int dbIndex;
-
-		@Bean
-		public RedisConnectionFactory redisConnectionFactory() {
-			RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-			redisStandaloneConfiguration.setHostName(host);
-			redisStandaloneConfiguration.setPort(port);
-			redisStandaloneConfiguration.setDatabase(dbIndex);
-			redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
-			JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
-			jedisClientConfiguration.connectTimeout(Duration.ofMillis(60000)).readTimeout(Duration.ofMillis(60000)).usePooling()
-					.poolConfig(jedisPoolConfig());
-			JedisConnectionFactory factory = new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration.build());
-			return factory;
-		}
-
-		@Bean
-		public JedisPoolConfig jedisPoolConfig() {
-			JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-			jedisPoolConfig.setMinIdle(1);
-			jedisPoolConfig.setMaxIdle(10);
-			jedisPoolConfig.setMaxTotal(200);
-			jedisPoolConfig.setMaxWaitMillis(-1);
-			jedisPoolConfig.setTestWhileIdle(true);
-			return jedisPoolConfig;
-		}
-
-	}
-
-}
-```
-你也可以自定义DataSource和RedisConnectionFactory 
-
-##### Chaconne去中心化部署
-在你的Spring应用程序的主函数上加上@EnableChaconneEmbeddedMode注解，然后启动
-示例代码：
+* Decentralized deployment
+Add the <code>@EnableChaconneEmbeddedMode</code> annotation to the main function of your spring application, and then start your application.
+Example：
 ``` java
 @EnableChaconneEmbeddedMode
 @SpringBootApplication
@@ -562,9 +473,9 @@ public class YourApplicationMain {
 
 }
 ```
-##### Chaconne中心化部署
-* 启动调度中心，这需要你新建一个SpringBoot项目，在主函数上加上@EnableChaconneDetachedMode注解，并指定为生产端
-示例代码：
+* Centralized deployment
+   - To start the scheduling center, you need to create a new SpringBoot project, add annotation <code>@EnableChaconneDetachedMode</code>  to the main function  and specify it as the production side
+Example：
 ``` java
 @EnableChaconneDetachedMode(DetachedMode.PRODUCER)
 @SpringBootApplication
@@ -575,9 +486,11 @@ public class ChaconneManagementMain {
 	}
 }
 ```
-（同时需要配置DataSource和RedisConnectionFactory）
+（DataSource and RedisConnectionFactory need to be configured）
 
-* 或者直接使用注解@ChaconneAdmin即可，示例代码：
+​           *  Or use the annotation <code>@ChaconneAdmin</code> directly
+Example：
+
 ``` java
 @ChaconneAdmin
 @SpringBootApplication
