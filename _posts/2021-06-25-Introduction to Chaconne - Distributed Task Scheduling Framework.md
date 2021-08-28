@@ -4,7 +4,7 @@ title: Introduction to Chaconne - A Distributed Task Scheduling Framework
 date: 2021-06-25 08:30:00.000000000 +09:00
 ---
 
-**chaconne** is a lightweight distributed task scheduling framework based on the SpringBoot framework. It can help you build a distributed task cluster easily and quickly.
+**chaconne** is a lightweight distributed task scheduling framework based on the <code>SpringBoot</code> framework. It can help you build a distributed task cluster easily and quickly.
 
 ### Chaconne Feature: 
 -----------------
@@ -236,6 +236,7 @@ public class EtlJob implements NotManagedJob {
 
 }
 ```
+
 * Using HTTP API
 POST  http://localhost:6543/job/admin/persistJob
 ``` json
@@ -268,6 +269,7 @@ POST  http://localhost:6543/job/admin/persistJob
     "attachment": "{\"initialParameter\": \"test\"}"
 }
 ```
+
 * Using SDK
 ``` java
 @Component
@@ -387,6 +389,7 @@ public class DemoTaskTwo {
 
 ```
 **DemoTask.java**
+
 ``` java
 @ChacJob
 @ChacTrigger(cron = "0 0/1 * * * ?", triggerType = TriggerType.CRON)
@@ -421,6 +424,7 @@ public class DemoTask {
 
 *  Create a DAG
 Dag Jobs only support API creation at present
+
 ``` java
 @RequestMapping("/dag")
 @RestController
@@ -437,12 +441,11 @@ public class DagJobController {
 
 	@GetMapping("/create")
 	public Map<String, Object> createDagTask() throws Exception {
-		Dag dag = new Dag(clusterName, applicationName, "testDag");// 创建一个Dag任务，并指定集群名，应用名，和任务名称
-		dag.setTrigger(new CronTrigger("0 0/1 * * * ?"));// 设置Cron表达式
-		dag.setDescription("This is only a demo of dag job");// 任务描述
-		DagFlow first = dag.startWith(clusterName, applicationName, "demoDagStart", DemoDagStart.class.getName());// 定义第一个节点
-		DagFlow second = first.flow(clusterName, applicationName, "demoDag", DemoDag.class.getName());// 定义第二个节点
-                // 第二个节点fork两个子进程处理
+		Dag dag = new Dag(clusterName, applicationName, "testDag");
+		dag.setTrigger(new CronTrigger("0 0/1 * * * ?"));
+		dag.setDescription("This is only a demo of dag job");
+		DagFlow first = dag.startWith(clusterName, applicationName, "demoDagStart", DemoDagStart.class.getName());
+		DagFlow second = first.flow(clusterName, applicationName, "demoDag", DemoDag.class.getName());
 		second.fork(clusterName, applicationName, "demoDagOne", DemoDagOne.class.getName());
 		second.fork(clusterName, applicationName, "demoDagTwo", DemoDagTwo.class.getName());
 		jobManager.persistJob(dag, "123");
@@ -451,7 +454,8 @@ public class DagJobController {
 
 }
 ```
-上面的DAG示例说明一下，chaconne框架提供的DAG模型支持串行流入，即flow模式，也提供了fork模式进行并行处理，上例中，任务demoDag fork了两个子进程（“demoDagOne”和“demoDagTwo”），即demoDagOne和demoDagTwo同时处理完了再触发demoDag任务。
+
+The above DAG example illustrates that the DAG model provided by the chaconne framework supports serial inflow, that is, flow mode, and also provides fork mode for parallel processing. In the above example, the task demoDag forks two sub-processes ("demoDagOne" and "demoDagTwo" ), that is, demoDagOne and demoDagTwo are processed at the same time and then the demoDag task is triggered.
 
 ### Deployment description
 --------------------------
@@ -488,7 +492,7 @@ public class ChaconneManagementMain {
 ```
 （DataSource and RedisConnectionFactory need to be configured）
 
-​           *  Or use the annotation <code>@ChaconneAdmin</code> directly
+Or use the annotation <code>@ChaconneAdmin</code> directly
 Example：
 
 ``` java
@@ -512,7 +516,7 @@ public class ChaconneManagerApplication {
 }
 ```
 
-2. 在你的Spring应用程序的主函数上加上@EnableChaconneDetachedMode注解（默认为消费端），然后启动
+2. Add the <code>@EnableChaconneDetachedMode</code> annotation to the main function of your Spring application (the default is the consumer side), and then start
 ``` java
 @EnableChaconneDetachedMode
 @SpringBootApplication
@@ -528,20 +532,22 @@ public class YourApplicationMain {
 }
 ```
 
-### Chaconne Console使用说明
+### How to use Chaconne Console?
 -----------------------------------
-Chaconne Console是**chaconne**框架提供的任务管理和查看的Web项目，它也支持去中心化部署和中心化部署模式，默认端口6140
-提供了如下功能：
-1. 保存任务和查看任务信息
-2. 暂停和继续任务
-3. 删除任务
-4. 手动运行任务
-5. 查看任务统计（按天）
-6. 查看任务运行时日志
+Chaconne Console is a Web project for task management and viewing provided by the chaconne framework. It also supports decentralized deployment and centralized deployment mode. The default port is 6140
+Provides the following functions:
 
-目前Chaconne Console项目还在不断的维护中，有些功能略显粗糙（任务JSON编辑器），有些功能暂未开放。
-同样，Chaconne Console也是一个SpringBoot的工程
-源码：
+1. Save tasks and view task information
+2. Pause and resume tasks
+3. Delete task
+4. Run the task manually
+5. View task statistics (by day)
+6. View task runtime log
+
+At present, the Chaconne Console project is still under continuous maintenance. Some functions are slightly rough, and some functions are not yet open.
+Similarly, Chaconne Console is also a SpringBoot project
+Source Code：
+
 ``` java
 @EnableChaconneClientMode
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
@@ -563,30 +569,29 @@ public class ChaconneConsoleMain {
 
 }
 ```
-注解@EnableChaconneClientMode表示启用一个任务管理客户端
-启动后，输入首页地址：http://localhost:6140/chaconne/index
-**首先进入的overview页面:**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-24e16386c32483c5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+The annotation <code>@EnableChaconneClientMode</code> means to enable a task management client
+After startup, enter the homepage address: http://localhost:6140/chaconne/index
+You will see:
+![image.png](/assets/images/chaconne/overview.png)
 
-**任务列表：**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-9e9284d981e924ba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+**Job List：**
+![image.png](/assets/images/chaconne/job-list.png)
 
-**创建任务：**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-7fb05512f9eb38b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+**Create a Job：**
+![image.png](/assets/images/chaconne/job-save.png)
 
-点击ShowJson可以展示Json格式的数据：
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-22915828fc6d8666.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+**Job Json Data：**
+![image.png](/assets/images/chaconne/job-json.png)
 
-**任务详情：**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-fc40433bb28e0044.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+**Job Detail：**
+![image.png](/assets/images/chaconne/job-detail.png)
 
-**任务日志：**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-2403eb9291183071.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+**Job Log：**
+![image.png](/assets/images/chaconne/job-log.png)
 
-**任务统计：**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-53ac71febc3b8b97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-可查看每一个任务的统计（按天）
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-99d131f3cc9d4920.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+**Job Statistics：**
+![image.png](/assets/images/chaconne/job-stat.png)
+You can view the statistics of each job (by day)
+![image.png](/assets/images/chaconne/job-stat-detail.png)
 
-最后，附上分布式任务调度系统chaconne的源码地址：https://github.com/paganini2008/chaconne.git
-有兴趣的朋友可以研究一下它的源码
+Git repository：https://github.com/paganini2008/chaconne.git
