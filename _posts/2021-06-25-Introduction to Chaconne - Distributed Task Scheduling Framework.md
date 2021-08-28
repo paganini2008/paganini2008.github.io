@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Introduction to Chaconne - A Distributed Task Scheduling Framework
+title: Introduction to Chaconne - A High Performance Distributed Task Scheduling Framework
 date: 2021-06-25 08:30:00.000000000 +09:00
 ---
 
@@ -99,6 +99,7 @@ The bottom layer of chaconne relies on the <code>tridenter-spring-boot-starter</
 2. Inherit <code>ManagedJob</code>
 3. Implements <code>Job</code>
 4. Implements <code>NotManagedJob</code>
+
 **Description：**
   - The first three methods of defining Job belong to declarative (programming) definition, In other word, a task is defined in code and loaded automatically with the start of the Spring Framework context
   - The last definition method is used to define dynamic tasks. Users can submit to create jobs on the Web UI (Chaconne Console) or directly create tasks by calling HTTP API / SDK. Note that the job objects created by this way do not belong to bean objects managed by Spring Application Context
@@ -274,6 +275,7 @@ POST  http://localhost:6543/job/admin/persistJob
 ```
 
 * Using SDK
+
 ``` java
 @Component
 public class TestService {
@@ -297,7 +299,8 @@ public class TestService {
 
 }
 ```
-**Note：** It is recommended that the job initializing parameter is in JSON format.
+
+**Note：**  It is recommended that the job initializing parameter is in JSON format.
 
 ### Job dependency
 ----------------------------
@@ -541,8 +544,8 @@ public class YourApplicationMain {
 ### How to use Chaconne Console?
 -----------------------------------
 Chaconne Console is a Web project for task management and viewing provided by the chaconne framework. It also supports decentralized deployment and centralized deployment mode. The default port is 6140
-Provides the following functions:
 
+Provides the following functions:
 1. Save tasks and view task information
 2. Pause and resume tasks
 3. Delete task
@@ -575,6 +578,7 @@ public class ChaconneConsoleMain {
 
 }
 ```
+
 The annotation <code>@EnableChaconneClientMode</code> means to enable a task management client
 After startup, enter the homepage address: http://localhost:6140/chaconne/index
 You will see:
