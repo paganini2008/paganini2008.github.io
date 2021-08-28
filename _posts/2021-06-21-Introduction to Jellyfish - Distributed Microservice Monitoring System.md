@@ -1,36 +1,42 @@
 ---
 layout: post
-title: Introduction to Jellyfish - A Distributed Microservice Monitoring System
+title: Introduction to Jellyfish - A Lightweight Distributed Microservice Monitoring System
 date: 2021-06-21 08:30:00.000000000 +09:00
 ---
 
-Jellyfish是一款轻量级的, 用Java写的, 分布式微服务实时监控系统，可无缝对接Spring Boot或Spring Cloud工程
+Jellyfish is a lightweight, distributed microservice real-time monitoring system written in Java, which can seamlessly connect with Spring Boot or Spring Cloud projects
 
-**Jellyfish提供的监控功能主要分为两个部分：**
-1. 应用程序日志统一收集和查询
-2. 统计和监控SpringBoot应用程序HTTP接口3个指标：请求耗时，错误率，并发度
+### Composition of Jellyfish：
+-----------------------------
+1. Unified collection and query of application logs
+2. Statistics and monitoring of <code>SpringBoot</code> application HTTP interface 3 indicators: request time, error rate, concurrency
 
-**Jellyfish部署方式**
-Jellyfish分为服务端和agent端
-**服务端**通常是一个独立的SpringBoot应用或集群，集群模式是通过另一个微服务分布式协作框架[tridenter](https://www.jianshu.com/writer#/notebooks/49992486/notes/88482536)实现的，Jellyfish服务端还需要部署Redis和ElasticSearch
-**Agent端** 通常是加入了jellyfish相关jar包的另一组SpringBoot应用或集群，它们向服务端实时发送数据包。
+### How Jellyfish is deployed？
+-------------------------------
+Jellyfish is divided into server side and agent side
+**Server** is usually an independent SpringBoot application or cluster. The cluster mode is implemented through another microservice distributed collaboration framework [tridenter](https://paganini2008.github.io/2021/06/Introduction-to-Tridenter-Microservice-Distribution-Collaboration-Framework/). The Jellyfish server also needs to deploy Redis and ElasticSearch
+**Agent side** is usually another group of SpringBoot applications or clusters that have joined the jellyfish-related jar package, and they send data packets to the server in real time.
 
-**Jellyfish的特性：**
-1. Jellyfish服务端基于流式计算框架vortex（底层是Netty4），低延迟，高并发，且支持TCP和HTTP两种传输协议
-2. Jellyfish服务端的网络通信层依赖vortex框架，支持动态水平扩展，支持数据最终一致性
-3. Jellyfish的应用接口统计是准实时的，纯内存计算，默认的统计时间窗口为1分钟（可自定义），但统计的接口数量变多可能会影响实时性，经测试，最大延迟保持在1分钟内，平均延迟在秒级。
+### Jellyfish Feature：
+------------------------------
+1. Jellyfish server is based on the streaming computing framework vortex (the bottom layer is Netty4), low latency, high concurrency, and supports two transmission protocols: TCP and HTTP
+2. The network communication layer of the Jellyfish server relies on the vortex framework, supports dynamic horizontal expansion, and supports final data consistency
+3. Jellyfish's application interface statistics are quasi real-time, pure memory calculations, the default statistical time window is 1 minute (customizable), but the increase in the number of statistical interfaces may affect the real-time performance. After testing, the maximum delay remains at Within 1 minute, the average delay is on the order of seconds.
 
-**Jellyfish系列一共有4个子工程：**
-1. jellyfish-console  
-    Jellyfish Web控制台，可独立运行，通常作为服务端，当然你也可以自定义服务 端，通过使用注解@EnableJellyfishServer
-2. jellyfish-http-spring-boot-starter  
-    jar包，Jellyfish监控应用程序接口进行指标统计的Agent程序包
-3. jellyfish-slf4j   
-    jar包，Jellyfish对接slf4j（目前只实现了logback对接），统一应用收集日志的 
-   agent程序包
-4. jellyfish-spring-boot-starter  Jellyfish核心jar包, 实现了全部的核心功能
+### Jellyfish Structure：
+--------------------
+1. jellyfish-console
+     Jellyfish Web console can run independently, usually as a server, of course, you can also customize the server by using the annotation <code>@EnableJellyfishServer</code>
+2. jellyfish-http-spring-boot-starter
+     jar package, Agent package for Jellyfish monitoring application program interface for index statistics
+3. jellyfish-slf4j
+     jar package, Jellyfish docking with slf4j (currently only logback docking is implemented), unified application of log collection
+    agent package
+4. jellyfish-spring-boot-starter Jellyfish core jar package, which implements all core functions
 
-### Install
+### Install:
+-------------------------------------
+
 ``` xml
 <dependency>
       <artifactId>jellyfish-spring-boot-starter</artifactId>
@@ -39,11 +45,13 @@ Jellyfish分为服务端和agent端
 </dependency>
 ```
 
-###  Jellyfish-console使用说明
-**如何对接slf4j, 统一收集日志：**
+###  How to use Jellyfish Console?
+--------------------------------
+**How to use slf4j and collect logs uniformly? **
 
-**你的应用程序需要：**
-1. pom.xml 添加依赖
+**Your application needs:**
+1. add dependency in pom.xml
+
 ``` xml
 <dependency>
       <artifactId>jellyfish-slf4j</artifactId>
@@ -51,7 +59,9 @@ Jellyfish分为服务端和agent端
      <version>1.0-RC3</version>
 </dependency>
 ```
-2. 修改logback.xml
+
+2. Edit logback.xml
+
 ``` xml
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
@@ -68,26 +78,24 @@ Jellyfish分为服务端和agent端
 </root>
 </configuration>
 ```
-目前只支持logback, 未来会支持更多
+Currently only logback is supported, more will be supported in the future
 
-3. 先启动Jellyfish-console
-启动命令：java -jar jellyfish-console-1.0-RC1.jar     
-默认端口：6100   地址：http://localhost:6100/jellyfish/log/
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-f2dbd84436a2eac3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+3. First Startup Jellyfish-console
+Java command：java -jar jellyfish-console-1.0-RC1.jar     
+Default port：6100   Location：http://localhost:6100/jellyfish/log/
+![image.png](/assets/images/jellyfish/log1.png)
 
-4. 再启动你的应用程序，此时日志会源源不断的流入Jellyfish Console：
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-078a6fac7e627493.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+4. Start your application again, and logs will continue to flow into the Jellyfish Console at this time:
+![image.png](/assets/images/jellyfish/log2.png)
 
-说明：
-jellyfish服务端从agent端接受来的每行日志数据会保存在es里。
-
-
+Description：
+Each line of log data received by the jellyfish server from the agent will be stored in ElasticSearch.
 
 
+**How to connect to Spring Boot or Spring Cloud projects and count HTTP interface metrics?**
+**Your application needs：**
+1. add dependency  in pom.xml：
 
-**如何对接Spring Boot或Spring Cloud项目，统计HTTP接口指标？**
-**你的应用需要：**
-1. 修改你的pom.xml, 添加：
 ``` xml
 <dependency>
 <artifactId>jellyfish-http-spring-boot-starter</artifactId>
@@ -96,30 +104,32 @@ jellyfish服务端从agent端接受来的每行日志数据会保存在es里。
 </dependency>
 ```
 
-2. 在application.properties加入：
+2. add a line in application.properties：
+
 ``` properties
-atlantis.framework.jellyfish.brokerUrl=http://localhost:6100  # Jellyfish console地址
+atlantis.framework.jellyfish.brokerUrl=http://xxx.xxx.xxx.xxx:6100  # Jellyfish console location
 ```
-3. 使用压测工具测试某一个接口，如图：
-接口列表：
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-cfea866870129232.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+3. Use a pressure test tool to test a certain interface, as shown in the figure：
+Http API List：
+![image.png](/assets/images/jellyfish/http1.png)
 
-点击【View】，会打开一直统计详情页，页面比较长
-**首先**在在顶部，会看到接口概览和一些统计
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-3d2844b7a9a8d696.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+Click [View], it will open the statistics details page all the time, the page is relatively long
+**First** At the top, you will see an overview of the interface and some statistics
+![image.png](/assets/images/jellyfish/http2.png)
 
-**接着**会看到一些仪表盘：
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-8fee847532ef9dd4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-上图中仪表盘分别显示当前的并发度，QPS, 平均响应时间，接着是两个饼图，分别监控http状态码和接口执行结果
-**然后**往下翻，会看到几个大图，都是按分钟统计的
-**响应时间统计和QPS统计**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-b10103c83f7f0149.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+**And then** will see some dashboards:
+![image.png](/assets/images/jellyfish/http3.png)
+The dashboard in the figure above shows the current concurrency, QPS, average response time, and then two pie charts to monitor the http status code and interface execution results.
+** Then ** Scroll down and you will see several big pictures, all of which are counted by the minute
+**Response time statistics and QPS statistics**
+![image.png](/assets/images/jellyfish/http4.png)
 
-最后显示的是**接口调用次数统计**和**Http状态码统计**
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-5883d2f4326970d8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+The last display is **Interface call count** and **Http status code statistics**
+![image.png](/assets/images/jellyfish/http5.png)
 
 
-按F12，查看返回的json数据：
+Sample json data:
+
 ``` json
 {
     "msg": "ok",
@@ -669,9 +679,11 @@ atlantis.framework.jellyfish.brokerUrl=http://localhost:6100  # Jellyfish conso
     "statusCode": 200
 }
 ```
-Jellyfish接口统计部分调用了vortex的metric模块的sdk,，所以是基于时间序列的，默认统计时间窗口是1分钟，滚动保存前60条数据，历史数据默认不落地，但可以通过实现MetricEvictionHandler和MetricSequencerFactory接口进行扩展，参考[vortex metrics](https://www.jianshu.com/writer#/notebooks/49992486/notes/88751021)
 
-最后，Jellyfish服务端的参考配置：
+The statistics part of the Jellyfish interface calls the sdk of the metric module of vortex, so it is based on time series. The default statistical time window is 1 minute, and the first 60 pieces of data are rolled and saved. The historical data does not fall by default, but it can be implemented by implementing the MetricEvictionHandler and MetricSequencerFactory interfaces. To expand, refer to [vortex metrics](https://paganini2008.github.io/2021/06/Introduction-to-Vortex-Metrics-Distributed-Time-Series-Computing-Framework/)
+
+Finally, the reference configuration of the Jellyfish Server：
+
 ``` properties
 spring.application.name=jellyfish-console
 spring.application.cluster.name=jellyfish-console-cluster
@@ -707,4 +719,4 @@ spring.freemarker.expose-session-attributes=true
 spring.freemarker.setting.number_format=#
 spring.freemarker.setting.url_escaping_charset=UTF-8
 ```
-具体更详细的参数设置请参考：https://github.com/paganini2008/jellyfish
+For specific and more detailed parameter settings, please refer to：https://github.com/paganini2008/jellyfish
