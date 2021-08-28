@@ -1,22 +1,28 @@
 ---
 layout: post
-title: Vortex - A Distributed Streaming Computing Framework
+title: Vortex - A High Performance Distributed Streaming Computing Framework
 date: 2021-06-20 08:30:00.000000000 +09:00
 ---
 
-**vortex**是一款轻量级的分布式流式计算框架。vortex中文意为旋涡，代表着数据流不断地流入这个旋涡然后被平稳地输出。
-**vortex**属于内存计算型的流式框架，适用于高可用，高并发，实时计算的业务场景。
-**vortex**是基于SpringBoot框架之上开发的，它依赖微服务分布式协作框架tridenter实现集群特性，vortex微服务内嵌了独立的TCP服务器（默认通过Netty4实现），vortex微服务集群中的应用程序通过tridenter多播功能相互发现并建立长连接，实现高可用，去中心化和负载均衡，使得整个Spring应用程序集群具备实时计算的能力。
+**Vortex** is a lightweight distributed streaming computing framework. It means that the data stream continuously flows into this vortex and then is output steadily.
+**Vortex** is a streaming framework for memory computing, suitable for high-availability, high-concurrency, and real-time computing business scenarios.
+**Vortex Framework** is developed based on the SpringBoot framework. It relies on the [Tridenter Framework](https://paganini2008.github.io/2021/06/Introduction-to-Tridenter-Microservice-Distribution-Collaboration-Framework/)  to achieve cluster features. The vortex microservice is embedded with an independent TCP server (implemented by Netty4 by default). The vortex microservice cluster Applications discover each other and establish long connections through the Tridenter Framework multicast function to achieve high availability, decentralization and load balancing, making the entire Spring application cluster capable of real-time computing.
 
-**vortex项目一共包含3部分：**
-1. vortex-common 
-    vortex框架的**agent端**jar包
+### Vortex Framework Structure:
+-------------------------------
+
+1. vortex-common
+   agent side jar package of vortex framework
 2. vortex-spring-boot-starter
-    vortex框架的核心jar包，添加到SpringBoot应用使其成为vortex**服务端**
+   The core jar package of the vortex framework, added to the SpringBoot application to make it a vortex **server**
 3. vortex-metrics
-    基于vortex的分布式时序计算框架，它是vortex重要的独立子项目
+   Distributed timing calculation framework based on vortex, which is an important independent sub-project of vortex
 
-**服务端安装**
+### Install:
+-------------------------------
+
+**Server Side: **
+
 ``` xml
 <dependency>
 	 <groupId>com.github.paganini2008.atlantis</groupId>
@@ -24,7 +30,7 @@ date: 2021-06-20 08:30:00.000000000 +09:00
 	 <version>1.0-RC3</version>
 </dependency>
 ```
-**agent端安装**
+**Agent Side: **
 ``` xml
 <dependency>
 	<groupId>com.github.paganini2008.atlantis</groupId>
@@ -33,14 +39,17 @@ date: 2021-06-20 08:30:00.000000000 +09:00
 </dependency>
 ```
 
-**目前基于vortex框架的开源项目有3个：**
-1. 分布式微服务监控系统 [Jellyfish](https://www.jianshu.com/p/3f8c7ede0d59)
-2. 分布式时序计算框架 [Vortex Metrics](https://www.jianshu.com/p/c5a0e4ae2fbd)
-3. 分布式网络爬虫[Greenfinger](https://www.jianshu.com/p/a31ad3f57d04)
+### Current Open Source Projects Based on the Vortex Framework Are:
+---------------------------------
+1. Distributed microservice monitoring system:  [Jellyfish](https://paganini2008.github.io/2021/06/Introduction-to-Greenfinger-High-Performance-Distributed-WebSpider-Framework/)
+2. Distributed time series computing framework:  [Vortex Metrics](https://paganini2008.github.io/2021/06/Introduction-to-Vortex-Metrics-Distributed-Time-Series-Computing-Framework/)
+3. Distributed web spider framework: [Greenfinger](https://paganini2008.github.io/2021/06/Introduction-to-Greenfinger-High-Performance-Distributed-WebSpider-Framework/)
 
-**如何在你的应用中使用vortex的API**
-前面说过，vortex服务端接收数据，vortex agent端发送数据，vortex提供了HTTP和TCP两种协议来接收和发送外部数据。
-1. vortex服务端要实现Handler接口实现定制，比如：
+### How to Use Vortex API in Your Application?
+------------------------------
+1. The vortex server needs to implement the Handler interface for customization
+Example: 
+
 ``` java
 @Slf4j
 public class TestHandler implements Handler{
@@ -52,10 +61,11 @@ public class TestHandler implements Handler{
 
 }
 ```
-2. 而agent端通过TransportClient实现类来发送数据
+2. The agent side sends data through the TransportClient implementation class
 
-下面以jellyfish中日志收集模块为例，参考源码：
-**服务端：**
+Reference source code (From [Jellyfish](https://paganini2008.github.io/2021/06/Introduction-to-Greenfinger-High-Performance-Distributed-WebSpider-Framework/)):
+**Server Side：**
+
 ``` java
 public class Slf4jHandler implements Handler {
 
@@ -99,7 +109,8 @@ public class Slf4jHandler implements Handler {
 }
 ```
 
-**Agent端**, 你需要自己实现一个Agent端, 向vortex服务端不断发送数据，可参考jellyfish-slf4j的TransportClientAppenderBase.java源码：
+**Agent Side**
+You need to implement an Agent side by yourself to continuously send data to the vortex server. You can refer to the <code>TransportClientAppenderBase</code> source code(From [Jellyfish](https://paganini2008.github.io/2021/06/Introduction-to-Greenfinger-High-Performance-Distributed-WebSpider-Framework/))：
 ``` java
     @Override
 	protected void append(ILoggingEvent eventObject) {
@@ -126,6 +137,7 @@ public class Slf4jHandler implements Handler {
 		transportClient.write(tuple);
 	}
 ```
-说明一下，vortex服务端和agent端的交互数据可以是Map, Tuple对象或json字符串，但最终都被包装成Tuple对象
+**Note:**
+The interaction data between the vortex application server and application agent can be Map, Tuple objects or json strings, but they are ultimately packaged into Tuple Object.
 
-具体使用，可参考vortex的源码：  https://github.com/paganini2008/vortex.git
+Git repository：  https://github.com/paganini2008/vortex.git
