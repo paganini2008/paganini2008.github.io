@@ -466,6 +466,7 @@ The above DAG example illustrates that the DAG model provided by the chaconne fr
 * Decentralized deployment
 Add the <code>@EnableChaconneEmbeddedMode</code> annotation to the main function of your spring application, and then start your application.
 Example：
+
 ``` java
 @EnableChaconneEmbeddedMode
 @SpringBootApplication
@@ -480,8 +481,10 @@ public class YourApplicationMain {
 
 }
 ```
+
 * Centralized deployment
    - To start the scheduling center, you need to create a new SpringBoot project, add annotation <code>@EnableChaconneDetachedMode</code>  to the main function  and specify it as the production side
+
 Example：
 ``` java
 @EnableChaconneDetachedMode(DetachedMode.PRODUCER)
