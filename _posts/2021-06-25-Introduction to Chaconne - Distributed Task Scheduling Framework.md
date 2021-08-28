@@ -107,6 +107,7 @@ The bottom layer of chaconne relies on the <code>tridenter-spring-boot-starter</
 **Examples：**
 
 * Creating a Job by annotation
+
 ``` java
 @ChacJob
 @ChacTrigger(cron = "*/5 * * * * ?")
@@ -132,6 +133,7 @@ public class DemoCronJob {
 ```
 
 * Creating a Job by implementing  <code>Job</code>
+
 ``` java
 @Component
 public class HelloWorldJob implements Job {
@@ -182,6 +184,7 @@ public class HelloWorldJob implements Job {
 ```
 
 *  Creating a Job by inherit  <code>ManagedJob</code>
+
 ``` java
 @Component
 public class HealthCheckJob extends ManagedJob {
@@ -222,10 +225,7 @@ public class HealthCheckJob extends ManagedJob {
 
 #### How to create a dynamic task?
 1. Create on the Web UI
-
    (Described Later)
-
-   
 
 2. Create by API
 * Creating a Job by inherit  <code>NotManagedJob</code>
@@ -243,6 +243,7 @@ public class EtlJob implements NotManagedJob {
 
 * Using HTTP API
 POST  http://localhost:6543/job/admin/persistJob
+
 ``` json
 {
     "jobKey": {
@@ -299,7 +300,6 @@ public class TestService {
 
 }
 ```
-
 **Note：**  It is recommended that the job initializing parameter is in JSON format.
 
 ### Job dependency
@@ -314,6 +314,7 @@ Based on the combination of serial dependency and parallel dependency, Chaconne 
 (for the convenience of examples, tasks are configured by annotation)
 
 * Serial Dependency
+
 ``` java
 @ChacJob
 @ChacTrigger(triggerType = TriggerType.DEPENDENT)
@@ -370,6 +371,7 @@ public class DemoTaskOne {
 }
 ```
 **DemoTaskTwo.java**
+
 ``` java
 @ChacJob
 @ChacTrigger(triggerType = TriggerType.SIMPLE)
@@ -487,8 +489,8 @@ public class YourApplicationMain {
 
 * Centralized deployment
    - To start the scheduling center, you need to create a new SpringBoot project, add annotation <code>@EnableChaconneDetachedMode</code>  to the main function  and specify it as the production side
-
 Example：
+
 ``` java
 @EnableChaconneDetachedMode(DetachedMode.PRODUCER)
 @SpringBootApplication
@@ -526,6 +528,7 @@ public class ChaconneManagerApplication {
 ```
 
 2. Add the <code>@EnableChaconneDetachedMode</code> annotation to the main function of your Spring application (the default is the consumer side), and then start
+
 ``` java
 @EnableChaconneDetachedMode
 @SpringBootApplication
