@@ -104,6 +104,7 @@ The bottom layer of chaconne relies on the <code>tridenter-spring-boot-starter</
   - The last definition method is used to define dynamic tasks. Users can submit to create jobs on the Web UI (Chaconne Console) or directly create tasks by calling HTTP API / SDK. Note that the job objects created by this way do not belong to bean objects managed by Spring Application Context
 
 **Examples：**
+
 * Creating a Job by annotation
 ``` java
 @ChacJob
@@ -178,6 +179,7 @@ public class HelloWorldJob implements Job {
 
 }
 ```
+
 *  Creating a Job by inherit  <code>ManagedJob</code>
 ``` java
 @Component
@@ -216,6 +218,7 @@ public class HealthCheckJob extends ManagedJob {
 
 }
 ```
+
 #### How to create a dynamic task?
 1. Create on the Web UI
 
