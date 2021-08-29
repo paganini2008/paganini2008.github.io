@@ -1,6 +1,6 @@
 ---
 layout: post
-title: FastJPA - Best helper for JPA
+title: FastJPA - Best Helper for JPA
 date: 2021-06-22 08:30:00.000000000 +09:00
 ---
 

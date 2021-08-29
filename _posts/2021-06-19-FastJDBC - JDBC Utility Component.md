@@ -1,6 +1,6 @@
 ---
 layout: post
-title: FastJDBC - A Quick and Convenient JDBC Utility Component
+title: FastJDBC - Quickly Developing of Java Programs based on JDBC
 date: 2021-06-19 15:32:24.000000000 +09:00
 ---
 
