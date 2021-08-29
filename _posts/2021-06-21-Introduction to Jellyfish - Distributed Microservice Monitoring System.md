@@ -4,7 +4,7 @@ title: Introduction to Jellyfish - A Lightweight Distributed Microservice Monito
 date: 2021-06-21 08:30:00.000000000 +09:00
 ---
 
-Jellyfish is a lightweight, distributed microservice real-time monitoring system written in Java, which can seamlessly connect with Spring Boot or Spring Cloud projects
+Jellyfish is a lightweight and high-performance distributed microservice real-time monitoring system written in Java, which can seamlessly connect with <code>SpringBoot</code> or <code>SpringCloud</code> projects
 
 ### Composition of Jellyfish：
 -----------------------------

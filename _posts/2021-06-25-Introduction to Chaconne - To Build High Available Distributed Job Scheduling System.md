@@ -1,10 +1,10 @@
 ---
 layout: post
-title: Introduction to Chaconne - A High Performance Distributed Task Scheduling Framework
+title: Introduction to Chaconne - To Build High Available Distributed Job Scheduling System
 date: 2021-06-25 08:30:00.000000000 +09:00
 ---
 
-**chaconne** is a lightweight distributed task scheduling framework based on the <code>SpringBoot</code> framework. It can help you build a distributed task cluster easily and quickly.
+**chaconne** is a powerful distributed job scheduling framework based on the <code>SpringBoot</code> framework. It can help you build a distributed task cluster easily and quickly without extra learning cost.
 
 ### Chaconne Feature: 
 -----------------
