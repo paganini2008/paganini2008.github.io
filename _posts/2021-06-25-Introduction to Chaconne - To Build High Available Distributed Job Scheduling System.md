@@ -599,12 +599,23 @@ You will see:
 **Job Detail：**
 ![image.png](/assets/images/chaconne/job-detail.png)
 
+**Job Tracks: **
+![image.png](/assets/images/chaconne/job-tracks.png)
+
 **Job Log：**
+
+* info:
 ![image.png](/assets/images/chaconne/job-log.png)
+
+* error:
+![image.png](/assets/images/chaconne/job-error.png)
 
 **Job Statistics：**
 ![image.png](/assets/images/chaconne/job-stat.png)
 You can view the statistics of each job (by day)
 ![image.png](/assets/images/chaconne/job-stat-detail.png)
+
+**Documentation：**
+![image.png](/assets/images/chaconne/job-doc.png)
 
 Git repository：https://github.com/paganini2008/chaconne.git
