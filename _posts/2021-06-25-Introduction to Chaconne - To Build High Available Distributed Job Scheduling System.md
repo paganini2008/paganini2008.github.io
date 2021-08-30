@@ -599,8 +599,8 @@ You will see:
 **Job Detail：**
 ![image.png](/assets/images/chaconne/job-detail.png)
 
-**Job Tracks: **
-![image.png](/assets/images/chaconne/job-tracks.png)
+**Job Trace:**
+![image.png](/assets/images/chaconne/job-trace.png)
 
 **Job Log：**
 
