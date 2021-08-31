@@ -4,9 +4,9 @@ title:  Devtools - A Pragmatic Java Utility Component Family
 date: 2021-06-21 08:30:00.000000000 +09:00
 ---
 
-## Devtools
+## **Devtools**
 A pragmatic Java Open Source Toolkit Family
-### Install:
+### **Install:**
 ------------------------------
 ``` xml
 <dependency>
@@ -16,11 +16,11 @@ A pragmatic Java Open Source Toolkit Family
 </dependency>
 ```
 
-### Compatibility:
+### **Compatibility:**
 ---------------------------
 Jdk1.8+ (or later)
 
-### Utility Components:
+### **Utility Components:**
 -----------------------------
 - devtools-lang
 - devtools-objectpool
@@ -28,10 +28,12 @@ Jdk1.8+ (or later)
 - devtools-beans-streaming
 - devtools-db4j
 
-## Devtools Lang
+
+
+## **Devtools Lang**
 Devtools Lang is a basic component, which encapsulates common class libraries in JDK such as primitive data types, collections, dates, IO, thread, JDBC, logs, etc. Devtools Lang provides static tool methods and a variety of APIs with a higher level of encapsulation, which aims to significantly improve the developing efficiency of developers, optimize code style and increase maintainability.
 
-### Install:
+### **Install:**
 -------------------------------
 ``` xml
 <dependency>
@@ -41,10 +43,10 @@ Devtools Lang is a basic component, which encapsulates common class libraries in
 </dependency>
 ```
 
-## Devtools ObjectPool
+## **Devtools ObjectPool**
 Devtools ObjectPool is an Object Pool utility component, which includes an implementation of object pool and database connection pool
 
-### Install:
+### **Install:**
 -------------------------------
 ``` xml
 <dependency>
@@ -54,13 +56,13 @@ Devtools ObjectPool is an Object Pool utility component, which includes an imple
 </dependency>
 ```
 
-## Devtools Cron4j
+## **Devtools Cron4j**
 Devtools-cron4j is a compact and practical Java scheduling  component from devtools series, which provides:
 - Support generating a cron expression by using API method
 - Built in multiple scheduler implementations (java.utils.Timer, java.concurrent.Executor, etc.)
 - Support interrupt policy
 
-### Install:
+### **Install:**
 -------------------------------
 ``` xml
 <dependency>
@@ -70,10 +72,10 @@ Devtools-cron4j is a compact and practical Java scheduling  component from devto
 </dependency>
 ```
 
-## Devtools Beans Streaming
+## **Devtools Beans Streaming**
 Devtools Beans Streaming is a solution for common querying or aggregative querying Java Object List. It provides functions similar to LINQ in C sharp
 
-### Install:
+### **Install:**
 -------------------------------
 ``` xml
 <dependency>
@@ -83,10 +85,10 @@ Devtools Beans Streaming is a solution for common querying or aggregative queryi
 </dependency>
 ```
 
-## Devtools Db4j
+## **Devtools Db4j**
 Devtools Db4j is a simple and practical JDBC utility component, which encapsulate common operations of JDBC, It is designed to make working with JDBC easier and code more concise.
 
-### Install:
+### **Install:**
 -------------------------------
 ``` xml
  <dependency>
