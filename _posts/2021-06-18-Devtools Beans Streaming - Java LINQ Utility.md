@@ -8,7 +8,6 @@ date: 2021-06-18 20:00:00.000000000 +09:00
 
 
 ## Install：
----------------------------
 
 ``` xml
 <dependency>
@@ -18,12 +17,10 @@ date: 2021-06-18 20:00:00.000000000 +09:00
 </dependency>
 ```
 ## Compatibility：
----------------------------
 
 jdk1.8+ (or later)
 
 ## Core API
---------------------------
 
 * Selector
 * Restriction
@@ -32,7 +29,6 @@ jdk1.8+ (or later)
 * BeanSorter
 
 ## Quick Start
------------------------------
 
 Define a POJO
 
@@ -213,7 +209,6 @@ Test Code:
 		test1();
 	}
 ```
-
 
 
 
