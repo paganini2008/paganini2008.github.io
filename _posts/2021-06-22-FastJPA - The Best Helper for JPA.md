@@ -4,53 +4,48 @@ title: FastJPA - The Best Helper for JPA
 date: 2021-06-22 08:30:00.000000000 +09:00
 ---
 
-FastJPA is a component based on SpringBoot framework. It encapsulates majority of JPA operation offered by SpringBoot framework and provides an object-oriented way to operate JPQL or HQL. It aims to help developer write SQL less and use tool more, thereby quickly improving development efficiency and making code more elegant and readable
+A very cool JPA developping tookit, which provides an API  to use  JPA core class with a  fluent style. It aims to promote to use JPA in  object-oriented way rather than to  write JQL or HQL in your code. In fact, <code>fastjpa-spring-boot-starter</code> is  rather easier than <code>spring-boot-starter-data-jpa</code> in API's complexity
 
-### Feature：
----------------------------
-* Save, delete and query operations in object-oriented mode
-* Optimize  query for the specified column name
-* Optimize how functions are used in queries
-* Optimize grouping query and filtering
-* Optimize list query and filtering
-* Optimize table join queries and filtering
-* Optimize subquery
-* Optimize paging queries and filtering
+## Install
 
-### Install:
--------------------------------
 ``` xml
 <dependency>
-      <groupId>com.github.paganini2008.springworld</groupId>
-      <artifactId>fastjpa-spring-boot-starter</artifactId>
-      <version>2.0.2</version>
+  <groupId>com.github.paganini2008.springworld</groupId>
+  <artifactId>fastjpa-spring-boot-starter</artifactId>
+  <version>2.0.1</version>
 </dependency>
+
 ```
-### Principle:
------------------------------
-FastJPA depends on spring-boot-starter-data-jpa actually, which is a lightweight encapsulation of JPA's QBC (query by criteria) API, and is designed into apis with a fluent style  (similar to Python's ORM framework Sqlalchemy), making JPA easier to operate SQL
 
-### Core Interfaces：
-----------------------------
-* EntityDao
-* Model
-* JpaUpdate
-* JpaDelete
-* JpaQuery
-* JpaPage
-* Filter
-* JpaGroupBy
-* Column
-* Field
-* JpaSort
-* JpaPageResultSet
-* JpaQueryResultSet
+## Compatibility
 
-### Preparation for using FastJPA:
--------------------------------
-For example:
-Here are three entities: User, Order, Product 
-* **User.java**
+* Jdk1.8 (or later)
+* <code>SpringBoot</code> Framework 2.2.x  (or later)
+* Hibernate 5.x (or later)
+
+
+## Core API
+
+- EntityDao
+- Model
+- JpaQuery
+- JpaPage
+- Filter
+- Column
+- Field
+- JpaGroupBy
+- JpaSort
+- JpaPageResultSet
+- JpaQueryResultSet
+- JpaUpdate
+- JpaDelete
+
+
+## Quick Start
+
+#### Entity Class
+
+<code>User.java</code>
 
 ``` java
 @Getter
@@ -76,7 +71,7 @@ public class User {
 }
 ```
 
-* **Product.java**
+<code>Product.java</code>
 
 ``` java
 @Getter
@@ -101,7 +96,7 @@ public class Product {
 }
 ```
 
-* **Order.java**
+<code>Order.java</code>
 
 ``` java
 @Getter
@@ -135,28 +130,33 @@ public class Order {
 }
 ```
 
-**Step1:**  Define DAO layer, which need extend EntityDao, because it is the entry of all APIs of FastJPA
+#### Repository Class
 
-* **UserDao.java**
+<code>UserDao.java</code>
+
 ``` java
 public interface UserDao extends EntityDao<User, Long> {
 }
 ```
-* **OrderDao.java**
+
+<code>OrderDao.java</code>
+
 ``` java
 public interface OrderDao extends EntityDao<Order, Long> {
 }
 ```
-* **ProductDao.java**
+
+<code>ProductDao.java</code>
+
 ``` java
 public interface ProductDao extends EntityDao<Product, Long> {
 }
 ```
-**Step 2:**  insert some data into these three tables respectively for demonstration
-Here, just for testing, I suppose an order contains a lot of products,  and a user can have lots of orders.
 
-### How to use EntityDao?
------------------------------------
+
+
+**EntityDao Source Code**
+
 ``` java
 @NoRepositoryBean
 public interface EntityDao<E, ID> extends JpaRepositoryImplementation<E, ID>, NativeSqlOperations<E> {
@@ -201,19 +201,8 @@ public interface EntityDao<E, ID> extends JpaRepositoryImplementation<E, ID>, Na
 
 }
 ```
-**Some Key Methods:** 
 
-+ <code>update()</code>  execute  the update sql statement 
-+ <code>delete()</code>  execute  the delete sql statement
-+ <code>query ()</code>  execute  the select sql statement, just returning list, not supporting pagination
-+ <code>select ()</code>  execute the select sql statement, both list and pagination being supported
-+ <code>multiquery ()</code>  similar to <code>query()</code>, but it returns data list of type <code>javax.persistence.tuple</code>, which is used in grouping query or multiple tables join query
-+ <code>multiselect ()</code> similar to <code>select()</code>, but it returns data list of type <code>javax.persistence.tuple</code>, which is used in grouping query or multiple tables join query
 
-In addition, FastJPA also supports native SQL query. It will be briefly introduced at the end of the article.
-
-### How to Use FastJPA?
------------------------------------
 #### Filter
 Equivalent to where condition in select statement
 * Comparison operators supported: lt, lte, gt, gte, eq, ne, like, in, between, isNull, notNull
@@ -227,6 +216,7 @@ filter = Restrictions.like("name", "%cat%");
 filter = Restrictions.eq("orignal", "Shanghai");
 ```
 **Example 2:**
+
 ``` java
 LogicalFilter filter = Restrictions.gt("price", 50); 
 productDao.query().filter(filter).selectThis().list().forEach(pro -> {
@@ -356,6 +346,7 @@ productDao.multiquery().select(columnList).list(10).forEach(t -> {
 ```
 
 #### Sub Query
+
 **Example 13:**
 ``` java
 		JpaSubQuery<Order,Order> subQuery = orderDao.query().subQuery(Order.class, "o").filter(Restrictions.eq("o", "id", "100")).select("o", "product.id");
@@ -386,6 +377,7 @@ productDao.multiquery().select(columnList).list(10).forEach(t -> {
 ```
 
 #### Order
+
 **Example 16:**
 ``` java
 orderDao.query().filter(Restrictions.gte("price", 50)).sort(JpaSort.desc("createTime"), JpaSort.asc("price"))
@@ -397,6 +389,7 @@ orderDao.query().filter(Restrictions.gte("price", 50)).sort(JpaSort.desc("create
 ```
 
 #### Multiple Table Join Query
+
 **Example 17:**
 ``` java
 PageResponse<Tuple> pageResponse = orderDao.multiselect().leftJoin("product", "p")
@@ -404,7 +397,7 @@ PageResponse<Tuple> pageResponse = orderDao.multiselect().leftJoin("product", "p
                 .sort(JpaSort.desc("createTime")).selectAlias("p")
 				.list(PageRequest.of(10));
 		for (PageResponse<Tuple> current : pageResponse) {
-			System.out.println("PageNumber: " + current.getPageNumber());
+			System.out.println("Page: " + current.getPageNumber());
 			for (Tuple tuple : current.getContent()) {
 				System.out.println(Arrays.toString(tuple.toArray()));
 			}
@@ -425,7 +418,7 @@ PageResponse<Tuple> pageResponse = orderDao.multiselect().leftJoin("product", "p
                 .sort(JpaSort.desc("createTime")).select(columnList)
 				.list(PageRequest.of(10));
 		for (PageResponse<Tuple> current : pageResponse) {
-			System.out.println("PageNumber: " + current.getPageNumber());
+			System.out.println("Page: " + current.getPageNumber());
 			for (Tuple tuple : current.getContent()) {
 				System.out.println(Arrays.toString(tuple.toArray()));
 			}
@@ -434,7 +427,7 @@ PageResponse<Tuple> pageResponse = orderDao.multiselect().leftJoin("product", "p
 ```
 
 #### List Query and Paging Query
-###### List Query:
+##### List Query:
 **Example 19:**
 ``` java
 orderDao.query().filter(Restrictions.gt("price", 50)).sort(JpaSort.desc("createTime")).selectThis()
@@ -450,8 +443,9 @@ orderDao.query().filter(Restrictions.gt("price", 50)).sort(JpaSort.desc("createT
 				});
 // Hibernate: select order0_.id as id1_0_, order0_.create_time as create_t2_0_, order0_.discount as discount3_0_, order0_.price as price4_0_, order0_.product_id as product_6_0_, order0_.receiver as receiver5_0_, order0_.user_id as user_id7_0_ from demo_order order0_ where order0_.price>50.0 order by order0_.create_time desc limit ?
 ```
-###### Paging Query：
+##### Paging Query：
 **Example 20:**
+
 ``` java
 PageResponse<OrderVO> pageResponse = orderDao.select().filter(Restrictions.gt("price", 50)).sort(JpaSort.desc("createTime"))
 	.selectThis().setTransformer(Transformers.asBean(OrderVO.class, null, (model, order, output) -> {
@@ -480,7 +474,7 @@ int rows = productDao.delete().filter(Restrictions.gt("price", 990)).execute();
 System.out.println("Effected rows: " + rows);
 // Hibernate: delete from demo_product where price>990.0
 ```
-###### Delete Operation With SubQuery:
+##### Delete Operation With SubQuery:
 **Example 22:**
 ``` java
 		JpaSubQuery<Order, Order> subQuery = productDao.delete().subQuery(Order.class);
@@ -490,13 +484,15 @@ System.out.println("Effected rows: " + rows);
 // Hibernate: delete from demo_product where id not in  (select order1_.product_id from demo_order order1_)
 ```
 #### Update Operation
+
 **Example 23:**
 ``` java
 int rows = userDao.update().set("vip", true).filter(Restrictions.eq("vip", false)).execute();
 System.out.println("Effected rows: " + rows);
 // Hibernate: update demo_user set vip=? where vip=?
 ```
-###### Update Operation With SubQuery:
+##### Update Operation With SubQuery:
+
 **Example 24:**
 ``` java
 		JpaSubQuery<Order, Order> subQuery = userDao.update().subQuery(Order.class).filter(Restrictions.gte("price", 500)).select("user");
@@ -504,15 +500,16 @@ System.out.println("Effected rows: " + rows);
 		System.out.println("Effected rows: " + rows);
 // update demo_user set vip=? where id in (select order1_.user_id from demo_order order1_ where order1_.price>=500.0)
 ```
-### Native Query
----------------------------------
+#### Native Query
+
 Notice: If there are some scene that FastJPA cannot meet, you'd better use native SQL directly to query 
+
 **Example 25:**
 ``` java
 ResultSetSlice<Order> resultSetSlice = orderDao.select("select * from demo_order where price>?", new Object[] { 50 });
 		PageResponse<Order> pageResponse = resultSetSlice.list(PageRequest.of(1, 10));
 		for (PageResponse<Order> current : pageResponse) {
-			System.out.println("第" + current.getPageNumber() + "页");
+			System.out.println("Page: " + current.getPageNumber());
 			for (Order order : current.getContent()) {
 				System.out.println("Order Id: "+order.getId() + ", Product Name: " + order.getProduct().getName() + ", Username: " + order.getUser().getName());
 			}
@@ -525,16 +522,16 @@ ResultSetSlice<Order> resultSetSlice = orderDao.select("select * from demo_order
 				new Object[0]);
 		PageResponse<Map<String, Object>> pageResponse = resultSetSlice.list(PageRequest.of(1, 5));
 		for (PageResponse<Map<String, Object>> current : pageResponse) {
-			System.out.println("第" + current.getPageNumber() + "页");
+			System.out.println("Page: " + current.getPageNumber());
 			for (Map<String, Object> vo : current.getContent()) {
 				System.out.println(vo);
 			}
 		}
 ```
 
-Repeat, In fact, FastJpa purely help developers increase the productivity of using JPA, If there exists some scenes that FastJPA cannot meet, please use native SQL in your business decisively.
 
-JPA Configuration Reference code:
+
+JPA Configuration Code:
 ``` java
 @Configuration
 @EnableTransactionManagement
@@ -566,7 +563,11 @@ public class JpaConfig {
 
 }
 ```
-Finally, add JPA configuration to <code>application.properties</code>：
+
+JPA configuration:
+
+<code>application.properties</code>
+
 ``` properties
 #Jpa Configuration
 spring.jpa.database=MYSQL
@@ -576,7 +577,6 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.hibernate.naming.physical-strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
 ```
-Git repository：
 
-https://github.com/paganini2008/fastjpa-spring-boot-starter.git
+Git repository:  https://github.com/paganini2008/fastjpa-spring-boot-starter.git
 
