@@ -291,7 +291,9 @@ productDao.multiquery().select(columnList).list(10).forEach(t -> {
 ```
 #### Field
 Represent aggregation function or other function, or just a number
-###### Aggregation Function:
+
+##### Aggregation Function:
+
 **Example 10:**
 ``` java
 ColumnList columnList = new ColumnList()
@@ -304,8 +306,10 @@ productDao.multiquery().groupBy("origin").select(columnList).setTransformer(Tran
 	System.out.println(vo);
 });
 ```
-###### Other function
-* concat 
+###### Other Function: 
+
+**concat**
+
 **Example 10:**
 ``` java
 ColumnList columnList = new ColumnList()
@@ -316,7 +320,9 @@ productDao.multiquery().groupBy("origin").select(columnList).setTransformer(Tran
 });
 // Hibernate: select concat(concat(max(cast(product0_.price as char)), '/'), min(cast(product0_.price as char))) as col_0_0_, product0_.origin as col_1_0_ from demo_product product0_ group by product0_.origin
 ```
-* lower and upper
+
+**lower and upper**
+
 **Example 11:**
 ``` java
 ColumnList columnList = new ColumnList()
@@ -328,7 +334,8 @@ productDao.multiquery().select(columnList).list(10).forEach(t -> {
 // Hibernate: select lower(product0_.name) as col_0_0_, upper(product0_.origin) as col_1_0_ from demo_product product0_ limit ?
 ```
 
-* case when
+**case when**
+
 **Example 12:**
 ``` java
 		IfExpression<String, String> ifExpression = new IfExpression<String, String>(Property.forName("origin", String.class));
@@ -348,6 +355,7 @@ productDao.multiquery().select(columnList).list(10).forEach(t -> {
 #### Sub Query
 
 **Example 13:**
+
 ``` java
 		JpaSubQuery<Order,Order> subQuery = orderDao.query().subQuery(Order.class, "o").filter(Restrictions.eq("o", "id", "100")).select("o", "product.id");
 		Product product = productDao.query().filter(Restrictions.eq("id", subQuery)).selectThis().first();
@@ -355,6 +363,7 @@ productDao.multiquery().select(columnList).list(10).forEach(t -> {
 // Hibernate: select product0_.id as id1_1_, product0_.name as name2_1_, product0_.origin as origin3_1_, product0_.price as price4_1_ from demo_product product0_ where product0_.id=(select order1_.product_id from demo_order order1_ where order1_.id=100) limit ?
 ```
 **Example 14:**
+
 ``` java
 		JpaQuery<Order,Order> jpaQuery = orderDao.query();
 		JpaSubQuery<Product, BigDecimal> subQuery = jpaQuery.subQuery(Product.class, "p", BigDecimal.class)
@@ -365,6 +374,7 @@ productDao.multiquery().select(columnList).list(10).forEach(t -> {
 // Hibernate: select order0_.id as id1_0_, order0_.create_time as create_t2_0_, order0_.discount as discount3_0_, order0_.price as price4_0_, order0_.product_id as product_6_0_, order0_.receiver as receiver5_0_, order0_.user_id as user_id7_0_ from demo_order order0_ where order0_.price>=(select avg(product1_.price) from demo_product product1_) limit ?
 ```
 **Example 15:**
+
 ``` java
 		JpaQuery<Order,Order> jpaQuery = orderDao.query();
 		JpaSubQuery<Product, BigDecimal> subQuery = jpaQuery.subQuery(Product.class, "p", BigDecimal.class)
@@ -379,6 +389,7 @@ productDao.multiquery().select(columnList).list(10).forEach(t -> {
 #### Order
 
 **Example 16:**
+
 ``` java
 orderDao.query().filter(Restrictions.gte("price", 50)).sort(JpaSort.desc("createTime"), JpaSort.asc("price"))
                 .selectThis().list(10)
@@ -391,6 +402,7 @@ orderDao.query().filter(Restrictions.gte("price", 50)).sort(JpaSort.desc("create
 #### Multiple Table Join Query
 
 **Example 17:**
+
 ``` java
 PageResponse<Tuple> pageResponse = orderDao.multiselect().leftJoin("product", "p")
 				.filter(Restrictions.gte("p", "price", 50))
@@ -429,6 +441,7 @@ PageResponse<Tuple> pageResponse = orderDao.multiselect().leftJoin("product", "p
 #### List Query and Paging Query
 ##### List Query:
 **Example 19:**
+
 ``` java
 orderDao.query().filter(Restrictions.gt("price", 50)).sort(JpaSort.desc("createTime")).selectThis()
 				.setTransformer(Transformers.asBean(OrderVO.class, null, (model, order, output) -> {
@@ -444,6 +457,7 @@ orderDao.query().filter(Restrictions.gt("price", 50)).sort(JpaSort.desc("createT
 // Hibernate: select order0_.id as id1_0_, order0_.create_time as create_t2_0_, order0_.discount as discount3_0_, order0_.price as price4_0_, order0_.product_id as product_6_0_, order0_.receiver as receiver5_0_, order0_.user_id as user_id7_0_ from demo_order order0_ where order0_.price>50.0 order by order0_.create_time desc limit ?
 ```
 ##### Paging Query：
+
 **Example 20:**
 
 ``` java
@@ -468,6 +482,7 @@ PageResponse<OrderVO> pageResponse = orderDao.select().filter(Restrictions.gt("p
 There will be two sqls shown in console by select method when you do paging query, one is count select statement, another is select statement
 
 #### Delete Operation
+
 **Example 21:**
 ``` java
 int rows = productDao.delete().filter(Restrictions.gt("price", 990)).execute();
@@ -475,6 +490,7 @@ System.out.println("Effected rows: " + rows);
 // Hibernate: delete from demo_product where price>990.0
 ```
 ##### Delete Operation With SubQuery:
+
 **Example 22:**
 ``` java
 		JpaSubQuery<Order, Order> subQuery = productDao.delete().subQuery(Order.class);
@@ -486,6 +502,7 @@ System.out.println("Effected rows: " + rows);
 #### Update Operation
 
 **Example 23:**
+
 ``` java
 int rows = userDao.update().set("vip", true).filter(Restrictions.eq("vip", false)).execute();
 System.out.println("Effected rows: " + rows);
@@ -515,7 +532,9 @@ ResultSetSlice<Order> resultSetSlice = orderDao.select("select * from demo_order
 			}
 		}
 ```
+
 **Example 26:**
+
 ``` java
 		ResultSetSlice<Map<String, Object>> resultSetSlice = orderDao.selectForMap(
 				"select origin,max(price) as maxPrice,min(price) as minPrice,avg(price) as avgPrice from demo_product group by origin",
@@ -578,5 +597,7 @@ spring.jpa.hibernate.naming.physical-strategy=org.springframework.boot.orm.jpa.h
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
 ```
 
-Git repository:  https://github.com/paganini2008/fastjpa-spring-boot-starter.git
+Git repository:  
+
+https://github.com/paganini2008/fastjpa-spring-boot-starter.git
 
