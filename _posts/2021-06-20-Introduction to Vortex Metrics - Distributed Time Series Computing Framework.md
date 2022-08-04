@@ -216,15 +216,15 @@ http://localhost:6150/metrics/test/bigint/car/speed
 Use JMeter
 
 * Set Thread Group
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-ccf0d8735ea0c2ae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image.png](/assets/images/vortex/metrics/jMeter1.png)
 
 * Set HTTP Request Parameters
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-0f1c5fa5700eab82.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image.png](/assets/images/vortex/metrics/jMeter2.png)
 
 * Run it
 Input url:   http://localhost:6150/metrics/sequence/bigint/car/speed
 
-![image.png](https://upload-images.jianshu.io/upload_images/26217505-308f67aeaafba12f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image.png](/assets/images/vortex/metrics/search2.png)
 
 
 Git repository:  https://github.com/paganini2008/vortex.git
