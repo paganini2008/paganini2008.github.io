@@ -250,3 +250,12 @@ public class GreenFingerServerConsoleMain {
 
 
 
+### 🚀 Future Roadmap
+
+| 🎯 Feature                                    | 📌 Description                                                | 🏗 Status      |
+| -------------------------------------------- | ------------------------------------------------------------ | ------------- |
+| **🔄 Full Spring Boot 3 Support**             | Upgrade core framework to fully support **Spring Boot 3**, ensuring compatibility with the latest Java ecosystem. | 🚧 In Progress |
+| **📈 Enhanced Web Scraping Quality**          | Improve **parsing accuracy, anti-bot detection, and JavaScript rendering** for better data extraction. | 🎯 Planned     |
+| **📡 Distributed Crawler Cluster Monitoring** | Implement **real-time monitoring, failure recovery, and dynamic scaling** for large-scale web crawlers. | 🔍 Researching |
+| **🗄 Support for Multiple Databases**         | Extend support beyond **PostgreSQL**, adding **MySQL, MongoDB, and Redis** for flexible storage options. | 🎯 Planned     |
+
