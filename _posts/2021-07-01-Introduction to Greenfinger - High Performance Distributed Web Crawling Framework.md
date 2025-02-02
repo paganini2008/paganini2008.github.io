@@ -70,8 +70,8 @@ Provides a modern, interactive dashboard built with Angular, empowering users wi
   https://github.com/paganini2008/greenfinger.git
 * Directory Structure：
 ``` shell
-📂 **greenfinger**  
-├── 📂 **greenfinger-ui**  
+📂 greenfinger
+├── 📂 greenfinger-ui
 │   ├── 📜 pom.xml  
 │   ├── 📂 src  
 │   │   ├── 📂 config  # Configuration files  
