@@ -66,26 +66,29 @@ Provides a modern, interactive dashboard built with Angular, empowering users wi
 
 # Install:
 -----------------------------
-* Git Repository：
+* Git Repository
   https://github.com/paganini2008/greenfinger.git
-* Directory Structure：
+* Directory Structure
+
+
 
 ``` shell
 
+
 📂 greenfinger
 ├── 📂 greenfinger-ui
-│   ├── 📜 pom.xml  
-│   ├── 📂 src  
+│   ├── 📜 pom.xml
+│   ├── 📂 src
 │   │   ├── 📂 config  # Configuration files  
 │   │   ├── 📂 db      # Database-related scripts and configurations  
 │   │   └── ...  
 ├── 📂 greenfinger-spring-boot-starter 
-│   ├── 📜 pom.xml  
-│   ├── 📂 src  
+│   ├── 📜 pom.xml
+│   ├── 📂 src
 │   └── ...  
-├── 📜 LICENSE  
-├── 📜 pom.xml  
-└── 📜 README.md  
+├── 📜 LICENSE
+├── 📜 pom.xml
+└── 📜 README.md
 
 ```
 ### Steps: 
