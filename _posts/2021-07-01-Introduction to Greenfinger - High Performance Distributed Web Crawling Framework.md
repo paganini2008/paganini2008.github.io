@@ -69,7 +69,9 @@ Provides a modern, interactive dashboard built with Angular, empowering users wi
 * Git Repository：
   https://github.com/paganini2008/greenfinger.git
 * Directory Structure：
+
 ``` shell
+
 📂 greenfinger
 ├── 📂 greenfinger-ui
 │   ├── 📜 pom.xml  
@@ -77,7 +79,7 @@ Provides a modern, interactive dashboard built with Angular, empowering users wi
 │   │   ├── 📂 config  # Configuration files  
 │   │   ├── 📂 db      # Database-related scripts and configurations  
 │   │   └── ...  
-├── 📂 **greenfinger-spring-boot-starter**  
+├── 📂 greenfinger-spring-boot-starter 
 │   ├── 📜 pom.xml  
 │   ├── 📂 src  
 │   └── ...  
