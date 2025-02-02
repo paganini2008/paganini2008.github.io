@@ -128,9 +128,6 @@ greenfinger:
 
  ![image.png](/assets/images/greenfinger/p0.png)
 
-Default username: admin
-Default password:  admin123
-
 
 
 #  Greenfinger UI Guide
