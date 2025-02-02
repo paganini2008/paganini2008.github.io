@@ -6,7 +6,7 @@ date: 2021-07-01 08:30:00.000000000 +09:00
 
 [**GreenFinger**](https://github.com/paganini2008/greenfinger) is a high-performance, highly scalable distributed web crawler built in Java. Designed for both enterprise and individual users, it offers an intuitive user interface and minimal configuration, enabling seamless and efficient web resource extraction. As an open-source solution, [**GreenFinger**](https://github.com/paganini2008/greenfinger)  provides a powerful yet user-friendly approach to large-scale web crawling and data acquisition.
 
-## 🌟Feature: 
+## 🌟Features: 
 ------------------------------
 1. Seamless Spring Boot Integration
 Natively integrates with Spring Boot, ensuring effortless configuration, deployment, and maintenance. 
@@ -119,9 +119,9 @@ greenfinger:
 ```
 
 2. Create database and import table scripts
-   execute db/crawler.sql
+   **execute db/crawler.sql**
 3. <code>mvn clean install</code>
-4. run jar with <code>java -jar target/greenfinger-ui-service-1.0.0-SNAPSHOT-sources.jar --spring.config.location=config/application-local.yml </code>(Maybe will use **--add-opens=**java.base/java.lang=ALL-UNNAMED****)
+4. run jar with <code>java  --add-opens=java.base/java.lang=ALL-UNNAMED -jar greenfinger-ui-service-1.0.0-SNAPSHOT-sources.jar</code>
 
 2. Open the Web UI
     http://localhost:6120/ui/index.html
