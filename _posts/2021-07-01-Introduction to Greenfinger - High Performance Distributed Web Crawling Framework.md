@@ -1,189 +1,232 @@
 ---
 layout: post
-title: Introduction to Greenfinger - A High Performance Distributed Web Crawling Framework
+title: Introduction to Greenfinger - A High Performance Distributed Web Crawler Framework
 date: 2021-07-01 08:30:00.000000000 +09:00
 ---
 
-**Greenfinger** is a high-performance, extension-oriented distributed web spider framework written in Java. It is based on the SpringBoot framework. Through some parameters settings, it can easily build a distributed web spider microservice and even a microservice cluster. In addition, **Greenfinger** framework also provides rich APIs to customize your application system.
+[**GreenFinger**](https://github.com/paganini2008/greenfinger) is a high-performance, highly scalable distributed web crawler built in Java. Designed for both enterprise and individual users, it offers an intuitive user interface and minimal configuration, enabling seamless and efficient web resource extraction. As an open-source solution, [**GreenFinger**](https://github.com/paganini2008/greenfinger)  provides a powerful yet user-friendly approach to large-scale web crawling and data acquisition.
 
-### Feature: 
+## 🌟Feature: 
 ------------------------------
-1. Perfectly compatible with SpringBoot 2.2.0 (or later)
+1. Seamless Spring Boot Integration
+Natively integrates with Spring Boot, ensuring effortless configuration, deployment, and maintenance. 
 
-2. Support universal and vertical crawlers
+2. Scalable, High-Throughput Distributed Crawling 
+Architected for distributed environments, enabling seamless horizontal scaling to handle massive workloads efficiently. 
 
-3. Adopt depth first crawling strategy
+3. Optimized Network Communication with Netty 
+Leverages Netty for ultra-low-latency networking, with additional support for Mina and Grizzly for flexible communication strategies. 
 
-4. It is designed as a multi process and highly available crawler architecture to support dynamic horizontal expansion and load balancing
+4. Enterprise-Grade URL Deduplication 
+Implements billion-scale deduplication using Bloom Filter and RocksDB, ensuring optimal storage efficiency and crawl accuracy. 
 
-5. Built in multiple load balancing algorithms or custom load balancing algorithms
+5. Granular URL Customization 
+Supports fine-grained control over URL selection, allowing users to define initial URLs, retain only relevant URLs, and exclude undesired links dynamically. 
 
-6. Support full index and incremental index
+6. Advanced Fault Tolerance & Crawler Constraints 
+Incorporates intelligent retry mechanisms, configurable timeouts, target URL limits, and maximum crawl depth enforcement for robust error handling. 
 
-7. Support scheduled tasks to update indexes
+7. Multi-Engine Web Content Extraction 
+Integrates Playwright, Selenium, and HtmlUnit to capture and process dynamic web content efficiently.  
 
-8. Support a variety of mainstream HTTP client parsing technologies
+8. Strict Adherence to Robots.txt 
+Fully complies with the Robots Exclusion Protocol, ensuring ethical and responsible web crawling.  
 
-9. Support 100 million URL uniqueness
+9. Comprehensive Developer API 
+Exposes a rich set of APIs, enabling seamless customization, extension, and integration into diverse ecosystems. 
 
-10. Built in multiple conditional interrupt policies or custom conditional interrupt policies
+10. Automated Authentication Handling 
+Supports intelligent login and logout workflows, facilitating seamless authentication across secured web portals. 
 
-11. Multiple version index query mechanism
+11. Version-Controlled Web Document Management 
+Assigns unique versioning to crawled documents, enabling multi-version indexing for enhanced content tracking and retrieval. 
 
-### Compatibility:
------------------------------------
-1. jdk8 (or later)
-2. SpringBoot Framework 2.2.x (or later)
-3. Redis 3.x (or later)
-4. PostgreSQL 9.x (or later)
-5. ElasticSearch 6.x (or later)
-
-**Notice**
-
-  - **Redis** is used to save cluster information
-  - **PostgreSQL** is used to save the crawled URL information
-  - **Elasticsearch** is used to create indexes and search indexes
+12. Intuitive Angular-Based Web Interface 
+Provides a modern, interactive dashboard built with Angular, empowering users with real-time monitoring, configuration, and management capabilities. 
 
 
-### Install:
+## 🚀  Technology Stack
+-----------------------------------------
+
+| Technology      | Version Requirement | Description |
+|---------------|----------------|-------------|
+| ☕ **JDK**      | 17 or later    | Core Java runtime environment |
+| 🌱 **Spring Boot** | 2.7.18        | Backend framework for microservices and rapid development |
+| ⚡ **Netty**     | 4.x           | High-performance asynchronous networking framework |
+| 🔥 **Redis**     | 7.x or later  | In-memory data store for caching and message queuing |
+| 🐘 **PostgreSQL** | 9.x or later  | High-performance, open-source relational database |
+| 🔍 **ElasticSearch** | 7.16.2 or later | Distributed search and analytics engine |
+| 🕷 **Selenium** | 4.x           | Web automation framework for headless and UI-based scraping |
+| 🎭 **Playwright** | 1.48          | Modern browser automation tool for scraping and testing |
+| 📄 **HtmlUnit**  | 2.6           | Lightweight headless browser for quick HTML processing |
+| 🌐 **Angular**    | 19.x                  | Frontend framework for building interactive web applications |
+| 🎨 **Angular Material** | Latest        | UI component library for modern, responsive designs |
+
+
+
+# Install:
 -----------------------------
 * Git Repository：
   https://github.com/paganini2008/greenfinger.git
 * Directory Structure：
 ``` shell
-├── greenfinger
-|  ├── greenfinger-console
-|  |  ├── pom.xml
-|  |  └── src
-|  ├── greenfinger-spring-boot-starter
-|  |  ├── pom.xml
-|  |  └── src
-|  ├── LICENSE
-|  ├── pom.xml
-|  └── README.md
-```
-* Directory Description：
-  + **greenfinger-console**：
-     The Web UI of Greenfinger application, an independent SpringBoot application with its own management interface, which can add, modify, start and stop web spider tasks, and provide a search interface for real-time query
-  + **greenfinger-spring-boot-starter**：
-     Core jar of Greenfinger application, which implements all the above framework features, provides open APIs such as spider program management and search and even customize your own system with these APIs.
-
-###  Install Greenfinger Console：
-----------------------------
-  1. enter directory: greenfinger-console 
-  2. execute maven with <code>mvn clean install</code>
-  3. After successful execution, there will be a directory named 'run'. Move this directory to your working directory (the directory specified by yourself)
-  4. run jar with <code>java -jar greenfinger-console-1.0-RC2.jar --spring.config.location=config/ </code> (Just reference)
-
-* Directory Structure of Run：
-``` shell
-├── config
-|  ├── application-dev.properties
-|  └── application.properties
-├── db
-|  └── crawler.sql
-├── greenfinger-console-1.0-RC2.jar
-├── lib
-|  ├── aggs-matrix-stats-client-6.8.6.jar
-|  ├── aspectjweaver-1.9.5.jar
-|  ├── chaconne-spring-boot-starter-1.0-RC2.jar
-|  ├── checker-compat-qual-2.5.5.jar
-|  ├── classmate-1.5.1.jar
-|  ├── commons-codec-1.13.jar
-|  ├── commons-io-2.6.jar
-|  ├── ...
-└── logs
-   └── atlantis
-```
-* reference configuration：
-  
-
-Here are configuration files, <code>application.properties</code> and <code>application-dev.properties</code>, which can be extended according to the actual situation. 
-
-  - <code>application.properties</code> mainly configure some global settings:
-
-``` properties
-spring.application.name=greenfinger-console
-spring.application.cluster.name=greenfinger-console-cluster
-
-#Freemarker Configuration
-spring.freemarker.enabled=true
-spring.freemarker.suffix=.ftl
-spring.freemarker.cache=false
-spring.freemarker.charset=UTF-8
-spring.freemarker.template-loader-path=classpath:/META-INF/templates/
-spring.freemarker.expose-request-attributes=true
-spring.freemarker.expose-session-attributes=true
-spring.freemarker.setting.number_format=#
-spring.freemarker.setting.locale=en_US
-spring.freemarker.setting.url_escaping_charset=UTF-8
-
-server.port=21212
-server.servlet.context-path=/atlantis/greenfinger
-
-spring.profiles.active=dev
-```
-Greenfinger Console uses freemarker as Web UI by default. 
-
-<code>application-dev.properties</code> mainly configure some settings that might be changed:
-
-``` properties
-#Jdbc Configuration
-atlantis.framework.greenfinger.datasource.jdbcUrl=jdbc:postgresql://localhost:5432/db_webanchor
-atlantis.framework.greenfinger.datasource.username=fengy
-atlantis.framework.greenfinger.datasource.password=123456
-atlantis.framework.greenfinger.datasource.driverClassName=org.postgresql.Driver
-
-#Redis Configuration
-atlantis.framework.redis.host=localhost
-atlantis.framework.redis.port=6379
-atlantis.framework.redis.password=123456
-atlantis.framework.redis.database=0
-
-spring.redis.messager.pubsub.channel=greenfinger-console-messager-pubsub
-
-#Vortex Configuration
-atlantis.framework.vortex.bufferzone.collectionName=MyGarden
-atlantis.framework.vortex.bufferzone.pullSize=100
-
-#Elasticsearch Configuration
-spring.data.elasticsearch.cluster-name=es
-spring.data.elasticsearch.cluster-nodes=localhost:9300
-spring.data.elasticsearch.repositories.enabled=true
-spring.data.elasticsearch.properties.transport.tcp.connect_timeout=60s
-
-#Chaconne Configuration
-#atlantis.framework.chaconne.producer.location=http://localhost:6543
-#atlantis.framework.chaconne.mail.host=smtp.your_company.com
-#atlantis.framework.chaconne.mail.username=your_email@your_company.com
-#atlantis.framework.chaconne.mail.password=0123456789
-#atlantis.framework.chaconne.mail.default-encoding=UTF-8
-
-webcrawler.pagesource.selenium.webdriverExecutionPath=D:\\software\\chromedriver_win32\\chromedriver.exe
-
-logging.level.indi.atlantis.framework.greenfinger=INFO
+📂 **greenfinger**  
+├── 📂 **greenfinger-ui**  
+│   ├── 📜 pom.xml  
+│   ├── 📂 src  
+│   │   ├── 📂 config  # Configuration files  
+│   │   ├── 📂 db      # Database-related scripts and configurations  
+│   │   └── ...  
+├── 📂 **greenfinger-spring-boot-starter**  
+│   ├── 📜 pom.xml  
+│   ├── 📂 src  
+│   └── ...  
+├── 📜 LICENSE  
+├── 📜 pom.xml  
+└── 📜 README.md  
 
 ```
-**Description：**
-<code>application-dev.properties</code> configures some external resources that Greenfinger framework depends on. By default, Greenfinger  application stores the crawled link information in PostgreSQL. Of course, you can also store it in other places (such as NoSQL database or other file system). As mentioned earlier, Greenfinger is an extension-oriented web spider framework, which provides rich APIs for extension, I will explain in detail in the next article about the implementation principle of Greenfinger later.
+### Steps: 
+1.  Modify configuration:
 
-The information in the above configuration such as database location, redis location should be modified according to your own situation.
+``` yaml
+spring:
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+  elasticsearch:
+    rest:
+      uris: http://127.0.0.1:9200
+      connection-timeout: 10000
+      read-timeout: 60000
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/test?characterEncoding=utf8&allowMultiQueries=true&useSSL=false&stringtype=unspecified
+    username: admin
+    password: 123456
+# Binding host name is preferred
+doodler:
+  transmitter:
+    nio:
+      server:
+        bindHostName: 127.0.0.1
+# Internal Work ThreadPool Threads      
+greenfinger:
+  workThreads: 1000
 
-### How to customize your application？
+```
+
+2. Create database and import table scripts
+   execute db/crawler.sql
+3. <code>mvn clean install</code>
+4. run jar with <code>java -jar target/greenfinger-ui-service-1.0.0-SNAPSHOT-sources.jar --spring.config.location=config/application-local.yml </code>(Maybe will use **--add-opens=**java.base/java.lang=ALL-UNNAMED****)
+
+2. Open the Web UI
+    http://localhost:6120/ui/index.html
+
+ ![image.png](/assets/images/greenfinger/p0.png)
+
+Default username: admin
+Default password:  admin123
+
+
+
+#  Greenfinger UI Guide
+-------------------------
+###  Catalog Management
+ ![image.png](/assets/images/greenfinger/p1.png)
+
+### Create a catalog
+ ![image.png](/assets/images/greenfinger/p2.png)
+
+### Edit a catalog
+ ![image.png](/assets/images/greenfinger/p3.png)
+
+##### 📌 Parameters
+
+| **Parameter**             | **Description**                                              |
+| ------------------------- | ------------------------------------------------------------ |
+| **ID**                    | Unique identifier for the catalog entry.                     |
+| **Name**                  | The name of the catalog item.                                |
+| **URL**                   | The target website to be crawled.                            |
+| **Category**              | User-defined category for classification.                    |
+| **Start URL**             | The initial entry point for crawling.                        |
+| **Included Path Pattern** | Defines URL patterns to be included in the crawl.            |
+| **Excluded Path Pattern** | Defines URL patterns to be excluded from crawling.           |
+| **Page Encoding**         | Character encoding of the webpage (e.g., UTF-8).             |
+| **Max Fetch Size**        | The maximum number of URLs to fetch in a single crawl session. |
+| **Fetch Duration**        | The total duration (in seconds) the crawl process should run. |
+| **Fetch Depth**           | Defines how deep the crawler should go (-1 means unlimited depth). |
+| **Fetch Interval**        | Time interval (in milliseconds) between consecutive requests. |
+| **Counting Type**         | Determines how crawled data is counted:                      |
+|                           | - **Total Fetched Count** (all requests made)                |
+|                           | - **Filtered Count** (URLs removed by filters)               |
+|                           | - **Failed Count** (requests that failed)                    |
+|                           | - **Saved Resource Count** (stored data)                     |
+|                           | - **Indexed Count** (successfully indexed pages)             |
+|                           | - **Duplicate Count** (repeated entries detected)            |
+| **Max Retry Count**       | The number of times a failed request will be retried.        |
+| **URL Path Filter**       | **Duplicate URL filtering mechanism:**                       |
+|                           | - **Redis BloomFilter** (efficient large-scale deduplication) |
+|                           | - **RocksDB** (persistent local storage-based deduplication) |
+| **HTML Extractor**        | **Webpage extraction engine:**                               |
+|                           | - **Playwright** (modern headless browser automation)        |
+|                           | - **Selenium** (full-browser-based interaction)              |
+|                           | - **HtmlUnit** (lightweight Java-based HTML parsing)         |
+| **URL Path Acceptor**     | Defines **custom URL patterns** to be accepted during crawling. |
+| **Credential Handler**    | Custom **Login Handler** (full class name) for handling authentication logic. |
+| **Indexed Checkbox**      | Determines whether the crawled data should be indexed (`Checked = Yes`). |
+| **Last Modified**         | Timestamp of the last modification.                          |
+| **Save Button**           | Confirms and saves the catalog settings.                     |
+| **Cancel Button**         | Discards changes and exits the editor.                       |
+
+
+
+### Run web crawler
+ ![image.png](/assets/images/greenfinger/p4.png)
+
+
+| **Icon**        | **Action**                                                   | **Description** |
+| --------------- | ------------------------------------------------------------ | --------------- |
+| 🧹 **Clean**     | Remove unnecessary or outdated data to free up space.        |                 |
+| 🌐 **Crawl**     | Start a new crawling session to gather updated data.         |                 |
+| 🛠 **Rebuild**   | Restart the crawler to reprocess and fetch data again.       |                 |
+| 📄 **Summary**   | View a high-level summary of the crawling results and statistics. |                 |
+| ❌ **Interrupt** | Stop an ongoing crawling session immediately.                |                 |
+| 🔄 **Sync**      | Synchronize data with external sources or distributed nodes. |                 |
+| 🚀 **Upgrade**   | Perform system upgrades, applying new features or patches.   |                 |
+
+### Monitor
+ ![image.png](/assets/images/greenfinger/p5.png)
+
+###  Query
+
+ ![image.png](/assets/images/greenfinger/p6.png)
+
+
+
+
+# Customize your application
+
+### Application Integration
 -------------------------
 **Step1**:  add dependency in your pom.xml:
 
 ``` xml
 <dependency>
-	<groupId>com.github.paganini2008.atlantis</groupId>
-	<artifactId>greenfinger-spring-boot-starter</artifactId>
-	<version>1.0-RC3</version>
+  <groupId>com.github.paganini2008</groupId>
+  <artifactId>greenfinger-spring-boot-starter</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
-**Step2**: add <code>@EnableGreenFingerServer</code> on the main.java:
+**Step2**: add <code>@EnableGreenFingerServer</code> on the main:
 
 ``` java
-@EnableGreenFingerServer
+@EnableAsync(proxyTargetClass = true)
+@EnableScheduling
+@EnableGreenfingerServer
 @SpringBootApplication
 public class GreenFingerServerConsoleMain {
 
@@ -192,94 +235,21 @@ public class GreenFingerServerConsoleMain {
 	}
 }
 ```
-**Step3**:  modify reference configuration if required:
+**Step3**:  Run it
 
-``` properties
-spring.application.name=cool-crawler
-spring.application.cluster.name=cool-crawler-cluster
 
-#Jdbc Configuration
-spring.datasource.jdbcUrl=jdbc:postgresql://localhost:5432/db_webanchor
-spring.datasource.username=fengy
-spring.datasource.password=123456
-spring.datasource.driverClassName=org.postgresql.Driver
+###  Extensible points:
 
-#Redis Configuration
-spring.redis.host=localhost
-spring.redis.port=6379
-spring.redis.password=123456
-spring.redis.messager.pubsub.channel=greenfinger-console-messager-pubsub
+| **Interface**                  | **Description**                                              |
+| ------------------------------ | ------------------------------------------------------------ |
+| **ResourceIndexManager**       | Manages indexing operations for crawled resources, ensuring efficient storage, retrieval, and versioning of indexed data. |
+| **ResourceManager**            | Handles the lifecycle of crawled URLs, including storage, deduplication, and scheduling for further processing. |
+| **ExistingUrlPathFilter**      | Implements a URL deduplication mechanism to prevent redundant crawling of previously processed URLs. |
+| **GlobalStateManager**         | Maintains and synchronizes the global state of the crawler across distributed nodes, ensuring coordinated execution. |
+| **InterruptionChecker**        | Monitors execution status and provides mechanisms to gracefully interrupt crawling operations when necessary. |
+| **UrlPathAcceptor**            | Defines a custom business logic filter for URL acceptance, allowing precise control over which URLs are processed. |
+| **ExtractorCredentialHandler** | Provides a pluggable authentication handler to automate login flows for accessing restricted content. |
+| **Extractor**                  | Defines the component responsible for extracting page content, supporting multiple implementations such as Playwright, Selenium, and HtmlUnit. |
 
-#Vortex Configuration
-atlantis.framework.vortex.bufferzone.collectionName=MyGarden
-atlantis.framework.vortex.bufferzone.pullSize=100
 
-#Elasticsearch Configuration
-spring.data.elasticsearch.cluster-name=es
-spring.data.elasticsearch.cluster-nodes=localhost:9300
-spring.data.elasticsearch.repositories.enabled=true
-spring.data.elasticsearch.properties.transport.tcp.connect_timeout=60s
-
-#Chaconne Configuration
-#atlantis.framework.chaconne.producer.location=http://localhost:6543
-#atlantis.framework.chaconne.mail.host=smtp.your_company.com
-#atlantis.framework.chaconne.mail.username=your_email@your_company.com
-#atlantis.framework.chaconne.mail.password=0123456789
-#atlantis.framework.chaconne.mail.default-encoding=UTF-8
-
-#webcrawler.pagesource.selenium.webdriverExecutionPath=D:\\software\\chromedriver_win32\\chromedriver.exe
-
-#logging.level.indi.atlantis.framework.greenfinger=INFO
-```
-You can modify the above configuration according to your own situation.
-
-###  Greenfinger Console Using Guide：
--------------------------
-Understanding the meaning of **Catalog** and **Resource:**
-* **Catalog**: a website that will be crawled
-* *Resource**: a URL that is crawled from a catalog
-
-Home Page：http://localhost:21212/atlantis/greenfinger/catalog/
-
-* **Catalog List**
-  ![image.png](/assets/images/greenfinger/1.png)
-  **Description：**
-  
-- 【Edit】 Edit Catalog
-  
-- 【Delete】Delete directory (including resources and indexes under the directory)
-  
-- 【Clean】 Clean up the directory (including the resources and indexes under the directory, but the directory is still there, and the version number is set to 0)
-  
-- 【Rebuild】Reconstruct the directory (start a web spider, crawl the directory again, build an index, and increase the version number)
-  
-- 【Update】Update the directory (start a web spider, then continue to crawl and update the directory from the latest resource, and build an index, with the version number unchanged)
-  
-  *When the crawler is running, you can also:*
-  
-- 【Stop】Stop running a web spider
-  
-- 【Realtime】Watching real-time statistics when a web spider works
-  
-* **Save Catalog：**
-  ![image.png](/assets/images/greenfinger/2.png)
-  **说明：**
-
-  + **Name**: catalog name
-  + **Cat**: category of catalogs
-  + **URL**: the started url      (e.g.  http://www.example.com)
-  + **Page Encoding**: encoding of page content    (e.g.  UTF-8, ISO-8859-1)
-  + **Path Pattern**: URL matching pattern, more patterns are separated by ","           (e.g. http://www/example.com/foo/\*\*, http://www/example.com/bar/\*\*)
-  + **Excluded Path Pattern**: Excluded URL matching pattern，more patterns are separated by ","
-  + **Max Fetch Size**: Maximum number of links crawled（100000 by default）
-  + **Duration**: The running time (milliseconds) of a web spider  (20 minutes by default), that means  beyond this time, the web spider will automatically end the crawling work.
-
-* **Observe the statistics of a running web spider：**
-![image.png](/assets/images/greenfinger/3.png)
-* **While the crawler is crawling, you can also search with keywords in real-time:**
-![image.png](/assets/images/greenfinger/4.png)
-* **If no keyword is entered, all items will be queried：**
-![image.png](/assets/images/greenfinger/5.png)
-
-Finally, due to the high complexity of Greenfinger Framework, it comprehensively uses the core functions of three frameworks: Micro service distributed collaboration framework [tridenter](https://paganini2008.github.io/2021/06/Introduction-to-Tridenter-Microservice-Distribution-Collaboration-Framework/), distributed streaming processing framework [vortex](https://paganini2008.github.io/2021/06/Introduction-to-Vortex-Distributed-Streaming-Computing-Framework/) and distributed task scheduling framework [chaconne](https://paganini2008.github.io/2021/06/Introduction-to-Chaconne-To-Build-High-Available-Distributed-Job-Scheduling-System/). Therefore, this paper mainly describes how to operate Greenfinger Console Web UI to create web spider tasks, run them, and search content by keyword. I will write an article about the implementation principle of Greenfinger Framework later.
 
