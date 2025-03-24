@@ -1,7 +1,7 @@
 ---
 layout: post
 title: EasyJPA - Your Best Partner for JPA Development!
-date: 2025-03-25 08:30:00.000000000 +09:00
+date: 2025-03-22 08:30:00.000000000 +09:00
 ---
 
 # EasyJPA – Your Best Partner for JPA Development!
