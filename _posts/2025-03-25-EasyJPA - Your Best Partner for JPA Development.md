@@ -4,6 +4,8 @@ title: EasyJPA – Your Best Partner for JPA Development!
 date: 2025-03-25 08:30:00.000000000 +09:00
 ---
 
+# EasyJPA – Your Best Partner for JPA Development!
+
 ### It's time to say goodbye to JPA Criteria API complexity! EasyJPA makes your code sleek, simple, and powerful!
 
 **EasyJPA** elegantly streamlines JPA's Criteria API with a fully **Lambda-based** and developer-friendly API, making dynamic queries both intuitive and efficient. It significantly reduces SQL/JPQL complexity, accelerates development, and improves code readability, ensuring a clean and concise query experience.
